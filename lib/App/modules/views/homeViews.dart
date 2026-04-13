@@ -10,41 +10,115 @@ import 'package:monlikountche/App/modules/routes/appRoute.dart';
 class Homeviews extends GetView<Homecontroller> {
   @override
   Widget build(BuildContext context) {
+    // le code pour le dialog
 
+    dialog() {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Align(
+            alignment: Alignment.topRight,
+            child: Container(
+              color: Colors.white,
+              height: 250,
+              width: 200,
+              child: Column(
+                children: [
+                  const SizedBox(height: 25),
 
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      elevation: 5,
+                      minimumSize: Size(170, 30),
+                    ),
+                    onPressed: () {},
+                    child: Text(
+                      "Bibliothèque",
+                      style: GoogleFonts.istokWeb(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
 
+                  const SizedBox(height: 15),
 
-     bottom(){
-  Get.bottomSheet(
-    
-    Container(
-      height: 150,
-      color: Colors.white,
-      child: Column(
-        children: [
-          ListTile(
-            leading: Icon(Icons.camera_alt),
-            title: Text("Prendre une photo"),
-            onTap: ()async {
-          await  controller.pickImage(ImageSource.camera);
-               Get.toNamed(approute.result);
-            },
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      elevation: 5,
+                      minimumSize: Size(170, 30),
+                    ),
+                    onPressed: () {},
+                    child: Text(
+                      "Historique",
+                      style: GoogleFonts.istokWeb(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      elevation: 5,
+                      minimumSize: Size(170, 30),
+                    ),
+                    onPressed: () {},
+                    child: Text(
+                      "Mon compte",
+                      style: GoogleFonts.istokWeb(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    bottom() {
+      Get.bottomSheet(
+        Container(
+          height: 150,
+          color: Colors.white,
+          child: Column(
+            children: [
+              ListTile(
+                leading: Icon(Icons.camera_alt),
+                title: Text("Prendre une photo"),
+                onTap: () async {
+                  await controller.pickImage(ImageSource.camera);
+                  if (controller.data == null) {
+                    Get.back();
+                  } else {
+                    Get.toNamed(approute.result);
+                  }
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.photo_library),
+                title: Text("Choisir dans la galerie"),
+                onTap: () async {
+                  await controller.pickImage(ImageSource.gallery);
+                   if (controller.data == null) {
+                    Get.back();
+                  } else {
+                    Get.toNamed(approute.result);
+                  }
+                },
+              ),
+            ],
           ),
-          ListTile(
-            leading: Icon(Icons.photo_library),
-            title: Text("Choisir dans la galerie"),
-            onTap: () async{
-             await controller.pickImage(ImageSource.gallery);
-               Get.toNamed(approute.result);
-            },
-          ),
-        ],
-      ),
-    ),
-  );
-}
-  
-  
+        ),
+      );
+    }
+
     return Scaffold(
       body: Column(
         children: [
@@ -75,7 +149,12 @@ class Homeviews extends GetView<Homecontroller> {
                   ],
                 ),
 
-                Icon(Icons.more_vert, size: 30),
+                IconButton(
+                  onPressed: () {
+                    dialog();
+                  },
+                  icon: Icon(Icons.more_vert, size: 30),
+                ),
               ],
             ),
           ),
@@ -84,24 +163,21 @@ class Homeviews extends GetView<Homecontroller> {
           SizedBox(height: 40),
           Expanded(
             child: Container(
-              
               padding: EdgeInsets.only(top: 40),
-              
+
               decoration: BoxDecoration(
                 color: Color.fromARGB(255, 188, 246, 222),
 
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(100),
                   topRight: Radius.circular(20),
-
                 ),
               ),
-              
+
               child: SingleChildScrollView(
                 child: Column(
                   children: [
                     // le carrousel
-                
                     CarouselSlider(
                       options: CarouselOptions(
                         height: 400.0,
@@ -110,7 +186,7 @@ class Homeviews extends GetView<Homecontroller> {
                             true, // Effet de zoom sur l'image centrale
                         viewportFraction: 0.9, // Portion de l'écran occupée
                       ),
-                
+
                       items: controller.imageAndText.map((item) {
                         return Builder(
                           builder: (BuildContext context) {
@@ -118,27 +194,28 @@ class Homeviews extends GetView<Homecontroller> {
                               child: Stack(
                                 children: [
                                   const SizedBox(height: 40),
-                
+
                                   Container(
                                     height: 320,
                                     width: 400,
-                                    child: Image.asset(
-                                      item["image"]!,
-                                      
-                                    ),
+                                    child: Image.asset(item["image"]!),
                                   ),
-                
-                
+
                                   Positioned(
                                     bottom: 0,
                                     left: 20,
                                     right: 20,
-                
+
                                     child: Text(
                                       item["text"]!,
                                       style: GoogleFonts.istokWeb(
                                         fontStyle: FontStyle.normal,
-                                        color: const Color.fromARGB(255, 23, 22, 22),
+                                        color: const Color.fromARGB(
+                                          255,
+                                          23,
+                                          22,
+                                          22,
+                                        ),
                                         fontSize: 20.0,
                                         fontWeight: FontWeight.w400,
                                       ),
@@ -151,31 +228,41 @@ class Homeviews extends GetView<Homecontroller> {
                           },
                         );
                       }).toList(),
-                    ),                 
-                        // la partie du boutton pour téléversé l'image 
-                          SizedBox(height: 40), 
-                
-                          TextButton.icon(
-                            
-                            onPressed: ()async{
-                             await bottom();
-                            
-                            }, 
-                            style: TextButton.styleFrom(
-                            elevation: 5,
-                            minimumSize: Size(300, 60),
-                            backgroundColor: Color(0XFF045435),
-                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                         
-                          icon: Icon(Icons.camera_alt_outlined, size: 30, color: Colors.white),
-                          label: Text("Téleversé une image",
-                          style: GoogleFonts.istokWeb(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)
-                          ), )
-                
+                    ),
+                    // la partie du boutton pour téléversé l'image
+                    SizedBox(height: 40),
+
+                    TextButton.icon(
+                      onPressed: () async {
+                        await bottom();
+                      },
+                      style: TextButton.styleFrom(
+                        elevation: 5,
+                        minimumSize: Size(300, 60),
+                        backgroundColor: Color(0XFF045435),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+
+                      icon: Icon(
+                        Icons.camera_alt_outlined,
+                        size: 30,
+                        color: Colors.white,
+                      ),
+                      label: Text(
+                        "Téleversé une image",
+                        style: GoogleFonts.istokWeb(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

@@ -11,8 +11,11 @@ class Homecontroller extends GetxController {
     final ImagePicker picker = ImagePicker();
     // Pick an image.
     final XFile? image = await picker.pickImage(source: source);
-
+if (image != null) {
     data = image;
+    update(); // <--- TRÈS IMPORTANT : Dit à GetX de redessiner les widgets concernés
+  }
+   
     return data;
   }
 
