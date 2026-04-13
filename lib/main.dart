@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        initialRoute: approute.swith,
+        initialRoute: approute.register,
         getPages: AppPage.routes,
         debugShowCheckedModeBanner: false,
     );
