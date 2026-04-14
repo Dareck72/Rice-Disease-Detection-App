@@ -117,7 +117,19 @@ class Registerview extends GetView<Registercontroller> {
 
                       // Le password
                       TextFormField(
+                        obscureText: controller.ObscurePass.value,
                         decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              controller.ObscurePass.value =
+                                  !controller.ObscurePass.value;
+                            },
+                            icon: Icon(
+                              controller.ObscurePass.value
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                            ),
+                          ),
                           labelText: "Password",
                           labelStyle: TextStyle(
                             fontSize: 14,
@@ -149,11 +161,24 @@ class Registerview extends GetView<Registercontroller> {
 
                       const SizedBox(height: 15),
 
-                      // téléphone
+                      //comf password
                       TextFormField(
                         keyboardType: TextInputType.number,
+                        obscureText: controller.ObscureComfPass.value,
+
                         decoration: InputDecoration(
-                          labelText: "Telephone",
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              controller.ObscureComfPass.value =
+                                  !controller.ObscureComfPass.value;
+                            },
+                            icon: Icon(
+                              controller.ObscureComfPass.value
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                            ),
+                          ),
+                          labelText: "Comfirme password",
                           labelStyle: TextStyle(
                             fontSize: 14,
                             color: Colors.green,
@@ -170,7 +195,7 @@ class Registerview extends GetView<Registercontroller> {
                           ),
                         ),
 
-                        controller: controller.telController,
+                        controller: controller.comfpassControler,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Nom nécéssaire";
@@ -196,7 +221,14 @@ class Registerview extends GetView<Registercontroller> {
                     backgroundColor: Color(0xFF045435),
                     minimumSize: Size(320, 50),
                   ),
-                  onPressed: () {},
+                  onPressed: () async {
+
+                    controller.loading.value = true;
+                    await controller.login();
+                    controller.loading.value = false;
+                 
+
+                  },
                   child: Text(
                     "Inscrivez vous",
                     style: TextStyle(
@@ -206,6 +238,7 @@ class Registerview extends GetView<Registercontroller> {
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 20),
 
                 Container(
@@ -224,17 +257,14 @@ class Registerview extends GetView<Registercontroller> {
                         ),
                       ),
 
-//Pour ignorere
+                      //Pour ignorere
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                         side: BorderSide(
-                          color: Colors.green,
-                         )    ,
-                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)
-                         ),
-                         minimumSize: Size(100, 40)   
-
+                          side: BorderSide(color: Colors.green),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          minimumSize: Size(100, 40),
                         ),
                         onPressed: () {
                           Get.offAllNamed(approute.swith);

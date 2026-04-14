@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class Usermodel {
   final String name;
   final String email;
@@ -11,7 +13,7 @@ class Usermodel {
     required this.tel,
   });
 
-  Usermodel FromMap(Map map) {
+   factory Usermodel.FromMap(Map<String, dynamic> map) {
     return Usermodel(
       email: map["email"],
       name: map["name"],
