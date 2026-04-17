@@ -10,7 +10,7 @@ class AuthService {
   Usermodel? signInData;
   Usermodel? updateData;
 
-  final String baseLink = "";
+  final String baseLink = "https/";
   Future<void> userlogin(String email, String password) async {
     final String url = "$baseLink";
 
@@ -53,7 +53,10 @@ class AuthService {
     }
   }
 
-  void logout() {
-    // Implémentez la logique de déconnexion ici
-  }
+  //  Future<void> updateData() async {
+  // }
+  // pour déterminé la localisation de la persone
+
+
+
 }

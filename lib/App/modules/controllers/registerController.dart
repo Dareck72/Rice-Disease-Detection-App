@@ -14,14 +14,13 @@ class Registercontroller extends GetxController {
   RxBool ObscurePass = true.obs;
   RxBool ObscureComfPass = true.obs;
   RxBool loading = false.obs;
-login() {
-  
+  login() async {
+    await Future.delayed(Duration(seconds: 6), () {
       AuthService().userSignIn(
         emailController.text,
         passwordController.text,
         nameController.text,
       );
-      
-  
+    });
   }
 }

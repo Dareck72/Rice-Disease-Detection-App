@@ -24,7 +24,7 @@ class Homeviews extends GetView<Homecontroller> {
               width: 200,
               child: Column(
                 children: [
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 15),
 
                   TextButton(
                     style: TextButton.styleFrom(
@@ -35,13 +35,14 @@ class Homeviews extends GetView<Homecontroller> {
                     child: Text(
                       "Bibliothèque",
                       style: GoogleFonts.istokWeb(
+                        color: Colors.black,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
 
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 10),
 
                   TextButton(
                     style: TextButton.styleFrom(
@@ -52,13 +53,14 @@ class Homeviews extends GetView<Homecontroller> {
                     child: Text(
                       "Historique",
                       style: GoogleFonts.istokWeb(
+                        color: Colors.black,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
 
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 10),
 
                   TextButton(
                     style: TextButton.styleFrom(
@@ -69,11 +71,30 @@ class Homeviews extends GetView<Homecontroller> {
                     child: Text(
                       "Mon compte",
                       style: GoogleFonts.istokWeb(
+                        color: Colors.black,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
+               
+                  const SizedBox(height: 10),
+
+                    TextButton(
+                    style: TextButton.styleFrom(
+                      elevation: 5,
+                      minimumSize: Size(170, 30),
+                    ),
+                    onPressed: () {},
+                    child: Text(
+                      "Drône option",
+                      style: GoogleFonts.istokWeb(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ), 
                 ],
               ),
             ),

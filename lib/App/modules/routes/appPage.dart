@@ -15,7 +15,6 @@ class AppPage {
 
 
 static  final routes=[
-
 GetPage(name:approute.result , page: ()=>Resultviews(),binding:Resultbinding() ),
 GetPage(name:approute.swith , page: ()=>Swithview(),binding:Swithbinding() ),
 GetPage(name:approute.home , page: ()=>Homeviews(),binding:Homebinding() ),

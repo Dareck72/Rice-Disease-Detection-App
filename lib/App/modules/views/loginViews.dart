@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:monlikountche/App/modules/controllers/loginController.dart';
+import 'package:monlikountche/App/services/authService.dart';
 
 class Loginviews extends GetView<Logincontroller> {
   final formKey = GlobalKey<FormState>();
@@ -99,35 +101,47 @@ class Loginviews extends GetView<Logincontroller> {
                       const SizedBox(height: 15),
 
                       // Le password
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: "Password",
-                          labelStyle: TextStyle(
-                            fontSize: 14,
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold,
+                      Obx(
+                        ()=> TextFormField(
+                          obscureText: controller.obscureValue.value,
+                          decoration: InputDecoration(
+                            suffixIcon: Obx(
+                              () => IconButton(
+                                onPressed: () {
+                                  controller.obscureValue.value =
+                                      !controller.obscureValue.value;
+                                },
+                                icon: Icon(controller.obscureValue.value ? Icons.visibility:Icons.visibility_off ),
+                              ),
+                            ),
+                            labelText: "Password",
+                            labelStyle: TextStyle(
+                              fontSize: 14,
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.green),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                        
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.green),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.green),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.green),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
+                        
+                          controller: controller.passwordController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Mot de passe nécéssaire";
+                            }
+                            if (value.length <= 4) {
+                              return "Entrer un pass word correcte";
+                            }
+                            return null;
+                          },
                         ),
-
-                        controller: controller.passwordController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Nom nécéssaire";
-                          }
-                          if (value.length <= 4) {
-                            return "Entrer un pass word correcte";
-                          }
-                          return null;
-                        },
                       ),
                     ],
                   ),
@@ -138,6 +152,9 @@ class Loginviews extends GetView<Logincontroller> {
                 Container(
                   alignment: Alignment.bottomLeft,
                   child: GestureDetector(
+                    onTap: (){
+                      
+                    },
                     child: Text(
                       "Password oublié",
                       style: TextStyle(
@@ -151,21 +168,42 @@ class Loginviews extends GetView<Logincontroller> {
                 const SizedBox(height: 25),
 
                 // Le boutton de d'inscription
-                TextButton(
-                  style: TextButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+                Obx(
+                  () => TextButton(
+                    style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      backgroundColor: Color(0xFF045435),
+                      minimumSize: Size(320, 50),
                     ),
-                    backgroundColor: Color(0xFF045435),
-                    minimumSize: Size(320, 50),
-                  ),
-                  onPressed: () {},
-                  child: Text(
-                    "Connectez vous",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                    onPressed: controller.loading.value
+                        ? null
+                        : () async {
+                            print("le bouttons de connexion pressé");
+
+                            if (formKey.currentState!.validate()) {
+                              print("Aprés le validate");
+
+                              controller.loading.value = true;
+                              await controller.login();
+                              controller.loading.value = false;
+                            }
+                          },
+                    child: Obx(
+                      () => controller.loading.value == true
+                          ? LoadingAnimationWidget.staggeredDotsWave(
+                              color: Colors.white,
+                              size: 40,
+                            )
+                          : Text(
+                              "Connectez vous",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
                     ),
                   ),
                 ),

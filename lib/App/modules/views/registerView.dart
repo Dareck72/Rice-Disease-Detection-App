@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:monlikountche/App/modules/controllers/registerController.dart';
 import 'package:monlikountche/App/modules/routes/appRoute.dart';
 
@@ -116,95 +117,103 @@ class Registerview extends GetView<Registercontroller> {
                       const SizedBox(height: 15),
 
                       // Le password
-                      TextFormField(
-                        obscureText: controller.ObscurePass.value,
-                        decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              controller.ObscurePass.value =
-                                  !controller.ObscurePass.value;
-                            },
-                            icon: Icon(
-                              controller.ObscurePass.value
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
+                      Obx(
+                        () => TextFormField(
+                          obscureText: controller.ObscurePass.value,
+                          decoration: InputDecoration(
+                            suffixIcon: Obx(
+                              () => IconButton(
+                                onPressed: () {
+                                  controller.ObscurePass.value =
+                                      !controller.ObscurePass.value;
+                                },
+                                icon: Icon(
+                                  controller.ObscurePass.value
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                ),
+                              ),
+                            ),
+                            labelText: "Password",
+                            labelStyle: TextStyle(
+                              fontSize: 14,
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.green),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.green),
+                              borderRadius: BorderRadius.circular(15),
                             ),
                           ),
-                          labelText: "Password",
-                          labelStyle: TextStyle(
-                            fontSize: 14,
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.green),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
 
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.green),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
+                          controller: controller.passwordController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Mot de passe  nécéssaire";
+                            }
+                            if (value.length <= 4) {
+                              return "Entrer un pass word correcte";
+                            }
+                            return null;
+                          },
                         ),
-
-                        controller: controller.passwordController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Nom nécéssaire";
-                          }
-                          if (value.length <= 4) {
-                            return "Entrer un pass word correcte";
-                          }
-                          return null;
-                        },
                       ),
 
                       const SizedBox(height: 15),
 
                       //comf password
-                      TextFormField(
-                        keyboardType: TextInputType.number,
-                        obscureText: controller.ObscureComfPass.value,
+                      Obx(
+                        () => TextFormField(
+                          obscureText: controller.ObscureComfPass.value,
 
-                        decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              controller.ObscureComfPass.value =
-                                  !controller.ObscureComfPass.value;
-                            },
-                            icon: Icon(
-                              controller.ObscureComfPass.value
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
+                          decoration: InputDecoration(
+                            suffixIcon: Obx(
+                              () => IconButton(
+                                onPressed: () {
+                                  controller.ObscureComfPass.value =
+                                      !controller.ObscureComfPass.value;
+                                },
+                                icon: Icon(
+                                  controller.ObscureComfPass.value
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                ),
+                              ),
+                            ),
+                            labelText: "Comfirme password",
+                            labelStyle: TextStyle(
+                              fontSize: 14,
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.green),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.green),
+                              borderRadius: BorderRadius.circular(15),
                             ),
                           ),
-                          labelText: "Comfirme password",
-                          labelStyle: TextStyle(
-                            fontSize: 14,
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.green),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
 
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.green),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
+                          controller: controller.comfpassControler,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return " Mot de pass nécéssaire";
+                            }
+                            if (value.length <= 4) {
+                              return "Entrer un pass word correcte";
+                            }
+
+                            return null;
+                          },
                         ),
-
-                        controller: controller.comfpassControler,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Nom nécéssaire";
-                          }
-                          if (!value.contains("@")) {
-                            return "Entrer un email correct";
-                          }
-                          return null;
-                        },
                       ),
                     ],
                   ),
@@ -213,28 +222,57 @@ class Registerview extends GetView<Registercontroller> {
                 const SizedBox(height: 25),
 
                 // Le boutton de d'inscription
-                TextButton(
-                  style: TextButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+                Obx(
+                  () => TextButton(
+                    style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      backgroundColor: Color(0xFF045435),
+                      minimumSize: Size(320, 50),
                     ),
-                    backgroundColor: Color(0xFF045435),
-                    minimumSize: Size(320, 50),
-                  ),
-                  onPressed: () async {
+                    onPressed: controller.loading.value
+                        ? null
+                        : () async {
+                            print(controller.loading.value);
 
-                    controller.loading.value = true;
-                    await controller.login();
-                    controller.loading.value = false;
-                 
+                            print("boutton de connexion appuyé ");
 
-                  },
-                  child: Text(
-                    "Inscrivez vous",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                            if (formKey.currentState!.validate()) {
+                              print("Entrer dans la validation ");
+
+                              controller.loading.value = true;
+
+                              print(
+                                "La valeur de loading avant la fonction  du login()     ${controller.loading.value}",
+                              );
+
+                              await controller.login();
+
+                              controller.loading.value = false;
+
+                              print(
+                                "La valeur de loading aprés le     ${controller.loading.value}",
+                              );
+                            }
+                          },
+                    child: Obx(
+                      () => controller.loading.value == true
+                          ?
+                           LoadingAnimationWidget.staggeredDotsWave(
+
+                              color: Colors.white,
+                              size: 40,
+
+                          )
+                          : Text(
+                              "Inscrivez vous",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
                     ),
                   ),
                 ),
