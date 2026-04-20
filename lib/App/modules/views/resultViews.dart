@@ -97,7 +97,7 @@ class Resultviews extends GetView<Resultcontroller> {
               ),
              ) 
       ,
-     const SizedBox(
+const SizedBox(
     height: 20,
    ),
 
@@ -157,12 +157,9 @@ child: Column(
   ],
 ),
 )
-      
-
-       , const SizedBox(
+, const SizedBox(
     height: 20,
    ),
-      
       // La  partie slution et son  boutton d'écourte
        Container(
               padding: EdgeInsets.only(left: 25, top: 10),
@@ -188,10 +185,8 @@ child: Column(
                   ),
                 ],
               ),
-            ),    
-      
-    
-          ],
+            ),     
+ ],
         ),
       ),
     );
