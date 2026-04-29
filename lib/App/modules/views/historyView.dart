@@ -9,8 +9,8 @@ import 'package:monlikountche/App/modules/controllers/resultController.dart';
 
 class HistoryView extends GetView<Historycontroller> {
   @override
+  
   Widget build(BuildContext context) {
-    Resultcontroller resultcontroller = Get.find<Resultcontroller>();
 
     return Scaffold(
       body: Container(
@@ -52,14 +52,14 @@ class HistoryView extends GetView<Historycontroller> {
                     return ListTile(
                       leading: CircleAvatar(
                         radius: 30,
-                        child: Obx(()=> Image.file(File(controller.historyList[index].image.path))),
+                        child: Obx(()=> Image.file(File(controller.data[index].image_path.path))),
                       ),
                       titleTextStyle: GoogleFonts.istokWeb(
                         fontWeight: FontWeight.w700,
                         fontSize: 15,
                       ),
                       title: Text('Il y as :'),
-                      subtitle: Obx(() => Text("Maladie détecté : ${File(controller.historyList[index].name)}")),
+                      subtitle: Obx(() => Text("Maladie détecté : ${File(controller.data[index].disease_name)}")),
                       subtitleTextStyle: TextStyle(),
                     );
                   
@@ -69,7 +69,7 @@ class HistoryView extends GetView<Historycontroller> {
                     return SizedBox(height: 20);
                   },
 
-                  itemCount: controller.historyList.length,
+                  itemCount: controller.data.length,
 
                 ),
               ),

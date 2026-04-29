@@ -13,7 +13,7 @@ class DataModel {
 
   factory DataModel.fromjson(Map data) {
     return DataModel(
-      image_path: data["file"],
+      image_path: data["image_path"],
       disease_name: data["disease_name"],
       created_at: data["created_at"],
     );

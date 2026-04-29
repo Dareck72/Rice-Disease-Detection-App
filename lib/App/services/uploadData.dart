@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:monlikountche/App/modules/controllers/loginController.dart';
 
-class uploadData {
+class uploadData  {
   Logincontroller logincontroller = Get.find<Logincontroller>();
 
   String url = "https://monlikoun-api.onrender.com/upload";
@@ -39,12 +39,24 @@ class uploadData {
   // ne montez pas et descendez les escaliers dans ta maison pour  quelques semaine
 
   getHistoryData() async {
-    var request = await http.get(Uri.parse(url));
+    print("entré dans la fonction de récupération de l'historique");
+      url = "https://monlikoun-api.onrender.com/historique";
+    var request = await http.get(
+      
+      Uri.parse(url),
+       headers: {
+      "Authorization": 'Bearer ${logincontroller.access_token.value}',
+    }
+      );
     int statucode = request.statusCode;
     if (statucode == 200 || statucode == 201) {
       print("requete accepté ");
       Map data = jsonDecode(request.body);
       return data;
+    }
+    else{
+      print("Echec de la récupération de l'historique avec le status code : ${request.statusCode} et le message d'erreur : ${request.reasonPhrase}");
+      throw Exception("erreur API");
     }
   }
 }

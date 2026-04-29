@@ -3,9 +3,18 @@ import 'package:monlikountche/App/modules/models/dataModel.dart';
 import 'package:monlikountche/App/services/uploadData.dart';
 
 class Historycontroller extends GetxController {
-  RxList historyList = [].obs;
+  @override
+  void onInit() {
+    print("entré dans la fonction onInit du controller de l'historique");
+    getData();
+    super.onInit();
+  }
 
-  getData() {
-    historyList.add(DataModel.fromjson(uploadData().getHistoryData()));
+ RxList<DataModel> data=<DataModel>[].obs;
+
+  getData() async {
+   data.add(DataModel.fromjson(await uploadData().getHistoryData()));
+
+    print(data);
   }
 }
