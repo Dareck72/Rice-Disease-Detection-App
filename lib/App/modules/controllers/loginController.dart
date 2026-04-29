@@ -7,10 +7,13 @@ class Logincontroller extends GetxController {
   TextEditingController passwordController = TextEditingController();
   RxBool loading = false.obs;
   RxBool obscureValue = false.obs;
+  RxString access_token = "".obs;
 
-  login() async {
-    await Future.delayed(Duration(seconds: 7), () {
-      AuthService().userlogin(emailController.text, passwordController.text);
-    });
-  }
+  login() async 
+     {  
+           access_token.value = await   AuthService().userlogin(emailController.text, passwordController.text);
+      
+         print("Le token d'accès est : ${access_token.value}");
+     }
+
 }

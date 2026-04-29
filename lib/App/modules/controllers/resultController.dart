@@ -1,26 +1,113 @@
 import 'dart:io';
-
 import 'package:get/get.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
-import 'package:monlikountche/App/modules/controllers/homeController.dart';
+import 'package:monlikountche/App/services/uploadData.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 
 class Resultcontroller extends GetxController {
-  // late Interpreter interpreter;
 
-  RxString Diseasedetected = "".obs;
 
-  RxString evolution = "".obs;
+  List<String> classes = [
+    "Tache brune",
+    "Echefaudure de feuille",
+    "Pas une image de riz",
+    "Sain",
+    "Puriculariose",
+  ];
 
-  XFile? riceDisease = Homecontroller().data;
+  Map<int, List> diseaseDescription = {
+    0: [
+      "Taches ovales brunes avec un centre beige et un pourtour foncé",
+      "Favorisée par un sol pauvre et un stress hydrique",
+      "Réduit progressivement la capacité de la plante à produire",
+    ],
 
+    1: [
+      "Lésions en zébrures irrégulières brun et beige partant de la pointe de la feuille",
+      "Causée par la bactérie Xanthomonas oryzae",
+      "Se propage rapidement par l'eau et le vent en période humide",
+    ],
+
+    2: [
+      "Aucune feuille de riz n'a été identifiée dans l'image",
+      "Veuillez soumettre une image claire et nette d'une feuille de riz",
+      "Assurez-vous que la feuille est bien visible et occupe la majorité de l'image",
+    ],
+
+    3: [
+
+      "Feuille d'un vert uniforme et éclatant sans taches ni lésions",
+       "Surface lisse et intacte sans décoloration ni nécrose",
+       "La plante se développe normalement sans signe d'infection"
+
+       ],
+    4: [
+      "Taches en forme de losange avec un centre gris et des bords brun-rougeâtre",
+      "Maladie causée par le champignon Magnaporthe oryzae",
+      "Se propage rapidement et peut détruire toute la culture",
+    ],
+  };
+
+  Map<int, List> diseaseSolution = {
+
+    0: [
+      "Appliquer du Dithane M-45 (Mancozèbe) très disponible dans les marchés d'Abomey-Calavi et Cotonou",
+
+      "Amender le sol avec du NPK 10-18-18 ou de la farine d'os pour renforcer le potassium",
+      
+      "Irriguer régulièrement avec les eaux des bas-fonds en saison sèche",
+    ],
+    1: [
+      "Utiliser de la Bouillie Bordelaise (cuivre) vendue dans toutes les boutiques d'intrants au Bénin",
+      "Éviter les blessures lors du sarclage manuel très pratiqué localement",
+      "Bien drainer les périmètres irrigués comme ceux de la vallée de l'Ouémé",
+    ],
+    2: [
+      "Veuillez soumettre une image valide de feuille de riz",
+      "Assurez-vous d'une bonne luminosité et netteté",
+      "Cadrez bien la feuille dans l'image",
+    ],
+    3: [
+      "Votre plant de riz est en bonne santé, aucune maladie détectée",
+      "Continuez à appliquer du NPK 15-15-15 pour maintenir une bonne fertilité du sol",
+      "Surveillez régulièrement vos plants et maintenez un drainage correct de votre parcelle",
+    ],
+    4: [
+      "Appliquer du Beam 75 WP (Tricyclazole) ou Fuji-One disponibles dans les agro-dealers au Bénin",
+      "Réduire les apports d'urée (NPK 15-15-15) pour éviter l'excès d'azote",
+      "Utiliser des variétés résistantes comme NERICA 4 ou TOX 3145 vulgarisées par le MAEP",
+    ],
+  
+
+  };
+
+  RxList solution = [].obs;
+  RxList description = [].obs;
+  RxInt predictedIndex = 0.obs;
+  RxString disease = "".obs;
+  RxDouble maxProb = 0.0.obs;
+
+// fonction de prédiction si c'est une feuille de riz ou pas 
+
+void predict(XFile data){
+
+
+
+
+
+}
+
+// fonction pour la prediction de la maladie
   void prediction(XFile data) async {
-    Interpreter interpreter = await Interpreter.fromAsset('model.tflite');
+    print("entré dans la fonction de prédiction");
 
-    img.Image ImageInput = img.decodeImage(
-      File(riceDisease!.path).readAsBytesSync(),
-    )!;
+    Interpreter interpreter = await Interpreter.fromAsset(
+      'assets/RiceDiseaseDetectionModel/RicedetectionModelwithInceptionResNetV2.tfLite',
+    );
+
+    img.Image ImageInput = img.decodeImage(File(data.path).readAsBytesSync())!;
+
     img.Image resized = img.copyResize(ImageInput, width: 256, height: 256);
 
     // conversion en tableau
@@ -30,17 +117,39 @@ class Resultcontroller extends GetxController {
         256,
         (y) => List.generate(256, (x) {
           var pixel = resized.getPixel(x, y);
-          return [
-            // (img.getR(pixel)) / 255.0,
-            // (img.getGreen(pixel)) / 255.0,
-            // (img.getBlue(pixel)) / 255.0,
-          ];
+          return [pixel.r / 255.0, pixel.g / 255.0, pixel.b / 255.0];
         }),
       ),
     );
-
-    var output = List.filled(1 * 3, 0).reshape([1, 3]);
+    var output = List.filled(1 * 4, 0).reshape([1, 4]);
 
     interpreter.run(input, output);
+    var prediction = output[0];
+    double maxProb = prediction[0];
+    int predictedIndex = 0;
+
+    for (int i = 1; i < prediction.length; i++) {
+      if (prediction[i] > maxProb) {
+        maxProb = prediction[i];
+        predictedIndex = i; //
+      }
+    }
+
+    disease.value = classes[predictedIndex];
+
+    description.value = diseaseDescription[predictedIndex]!;
+    solution.value = diseaseSolution[predictedIndex]!;
+
+    print("La maladie détecté est : $disease");
+    print("La probabilité est  : $maxProb");
+    print("Sortie de la fonction de prédiction");
+
+    // ajouter les data dans l'API
+
+    uploadData().sendData(data, disease.value   );
   }
+
+
+
+  
 }

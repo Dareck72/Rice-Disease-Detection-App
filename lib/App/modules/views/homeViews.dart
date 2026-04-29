@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -5,6 +7,9 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:monlikountche/App/modules/controllers/homeController.dart';
+import 'package:monlikountche/App/modules/controllers/loginController.dart';
+import 'package:monlikountche/App/modules/controllers/resultController.dart';
+import 'package:monlikountche/App/modules/controllers/swithController.dart';
 import 'package:monlikountche/App/modules/routes/appRoute.dart';
 
 class Homeviews extends GetView<Homecontroller> {
@@ -12,15 +17,19 @@ class Homeviews extends GetView<Homecontroller> {
   Widget build(BuildContext context) {
     // le code pour le dialog
 
+    Resultcontroller resultController = Get.find<Resultcontroller>();
+    Logincontroller logincontroller = Get.find<Logincontroller>();
+    Swithcontroller swithcontroller = Get.find<Swithcontroller>();
+
     dialog() {
       return showDialog(
         context: context,
-        builder: (BuildContext context) {
+        builder: (context) {
           return Align(
             alignment: Alignment.topRight,
             child: Container(
               color: Colors.white,
-              height: 250,
+              height: 250 ,
               width: 200,
               child: Column(
                 children: [
@@ -44,12 +53,42 @@ class Homeviews extends GetView<Homecontroller> {
 
                   const SizedBox(height: 10),
 
+                    if(logincontroller.access_token.value.isEmpty)
+                
                   TextButton(
+
                     style: TextButton.styleFrom(
                       elevation: 5,
                       minimumSize: Size(170, 30),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Get.toNamed(approute.login);
+                    },
+                    child: Text(
+                      "Se connecter",
+                      style: GoogleFonts.istokWeb(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  
+                  ),
+
+
+                  if(logincontroller.access_token.value.isNotEmpty)
+                 
+                  TextButton(
+
+                    style: TextButton.styleFrom(
+                      elevation: 5,
+                      minimumSize: Size(170, 30),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Get.toNamed(approute.history);
+                    },
                     child: Text(
                       "Historique",
                       style: GoogleFonts.istokWeb(
@@ -58,6 +97,7 @@ class Homeviews extends GetView<Homecontroller> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                  
                   ),
 
                   const SizedBox(height: 10),
@@ -67,7 +107,10 @@ class Homeviews extends GetView<Homecontroller> {
                       elevation: 5,
                       minimumSize: Size(170, 30),
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      swithcontroller.pageIndex.value = 1;
+                    },
                     child: Text(
                       "Mon compte",
                       style: GoogleFonts.istokWeb(
@@ -77,15 +120,17 @@ class Homeviews extends GetView<Homecontroller> {
                       ),
                     ),
                   ),
-               
+
                   const SizedBox(height: 10),
 
-                    TextButton(
+                  TextButton(
                     style: TextButton.styleFrom(
                       elevation: 5,
                       minimumSize: Size(170, 30),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                     child: Text(
                       "Drône option",
                       style: GoogleFonts.istokWeb(
@@ -94,7 +139,7 @@ class Homeviews extends GetView<Homecontroller> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ), 
+                  ),
                 ],
               ),
             ),
@@ -102,6 +147,7 @@ class Homeviews extends GetView<Homecontroller> {
         },
       );
     }
+
 
     bottom() {
       Get.bottomSheet(
@@ -119,18 +165,21 @@ class Homeviews extends GetView<Homecontroller> {
                     Get.back();
                   } else {
                     Get.toNamed(approute.result);
+                    resultController.prediction(controller.data!);
                   }
                 },
               ),
+
               ListTile(
                 leading: Icon(Icons.photo_library),
                 title: Text("Choisir dans la galerie"),
                 onTap: () async {
                   await controller.pickImage(ImageSource.gallery);
-                   if (controller.data == null) {
+                  if (controller.data == null) {
                     Get.back();
                   } else {
                     Get.toNamed(approute.result);
+                    resultController.prediction(controller.data!);
                   }
                 },
               ),

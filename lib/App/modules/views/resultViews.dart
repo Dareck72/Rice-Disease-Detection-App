@@ -11,8 +11,11 @@ class Resultviews extends GetView<Resultcontroller> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       body: Container(
+
         child: Column(
+
           children: [
 
             // Pour la parties de l'image
@@ -51,12 +54,20 @@ class Resultviews extends GetView<Resultcontroller> {
               ),
             ),
 
-//pour la partie du text et des bouttons 
 
+            Expanded(
+
+              child:Container(
+
+                child:
+            ListView(
+                 
+           children:[
             Container(
               padding: EdgeInsets.only(left: 25, top: 10),
               child: Row(
                 children: [
+
                   Text(
                     "Symptome",
                     style: TextStyle(
@@ -65,7 +76,9 @@ class Resultviews extends GetView<Resultcontroller> {
                       fontSize: 25,
                     ),
                   ),
+                
                   const SizedBox(width: 2),
+                 
                   IconButton(
                     onPressed: () {},
                     icon: Icon(
@@ -77,91 +90,94 @@ class Resultviews extends GetView<Resultcontroller> {
                 ],
               ),
             ),
-       
-       
-   const SizedBox(
-    height: 25,
-   ),
-//   la description de la feuille de maladie 
              Container(
               width: 340,
               padding: EdgeInsets.all(15),
               child: Column(
                   children: [
-                markdown("Jaunissement progressif des extrémités des feuilles"),
+                Obx(()=> markdown(controller.description[0])),
                 const SizedBox(height: 15,),
-                markdown(" Stries allongées jaunâtres à brun clair"),
+                              Obx(()=> markdown(controller.description[1])),
+
                 const SizedBox(height: 15,),
-                 markdown("Aspect flétri des feuilles")
+                              Obx(()=> markdown(controller.description[2])),
+
              ],
               ),
              ) 
       ,
-const SizedBox(
-    height: 20,
-   ),
+            const SizedBox(
+                height: 20,
+              ),
 
-Container(
+// la prediction et son resultat
+      
+              Container(
+                    padding: EdgeInsets.all(10),
+                    height: 120,
+                    decoration: BoxDecoration(
+                    color: Color(0xFFEEEAEA),
+          
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
 
-  padding: EdgeInsets.all(10),
-  height: 120,
-decoration: BoxDecoration(
-  color: Color(0xFFEEEAEA),
-  
-),
-child: Column(
-  mainAxisAlignment: MainAxisAlignment.center,
-  crossAxisAlignment: CrossAxisAlignment.center,
-  children: [
+            //la maladie détecté 
+            Row(
+              children: [
+            
+                Text("Maladie détectée :", style: GoogleFonts.istokWeb(
+              fontSize: 22,
+              fontWeight: FontWeight.w400,
+            color: const Color.fromARGB(255, 20, 87, 22)
+                ),),
 
-    //la maladie détecté 
-    Row(
-      children: [
-     
-        Text("Maladie détectée :", style: GoogleFonts.istokWeb(
-      fontSize: 22,
-      fontWeight: FontWeight.w400,
-     color: const Color.fromARGB(255, 20, 87, 22)
-        ),),
+                const SizedBox(width: 10,),
 
-        const SizedBox(width: 10,),
+                Obx(
+                  ()=> Text("${controller.disease.value}",maxLines: 2,style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: const Color.fromARGB(255, 224, 207, 18)
+                  ),),
+                ),
+              ],
+            ),
 
-        Text("Bactériose du riz",maxLines: 2,style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: const Color.fromARGB(255, 224, 207, 18)
-        ),),
-      ],
-    ),
+        // Pour le niveaux de sureté 
+             Row(
+              children: [
 
-// Pour le niveaux de sureté 
- Row(
-      children: [
+                Text("Probabilité :", style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 20,
+                  color: const Color.fromARGB(255, 20, 87, 22)
+                ),),
 
-        Text("Niveaux d'évolution :", style: TextStyle(
-          fontWeight: FontWeight.w400,
-          fontSize: 20,
-          color: const Color.fromARGB(255, 20, 87, 22)
-        ),),
+                const SizedBox(width: 10,),
 
-        const SizedBox(width: 10,),
-
-    Text("8 %" , style: TextStyle(
-      fontSize: 20
-    ),)
-      ],
-    ),
+            Text("all", style: TextStyle(
+              fontSize: 20
+            ),)
+              ],
+            ),
 
 
 
-  ],
-),
-)
-, const SizedBox(
-    height: 20,
-   ),
+          ],
+        ),
+        )
+,
+
+           const SizedBox(
+             height: 20,
+            ),
+
       // La  partie slution et son  boutton d'écourte
-       Container(
+
+            Container(
               padding: EdgeInsets.only(left: 25, top: 10),
               child: Row(
                 children: [
@@ -186,7 +202,37 @@ child: Column(
                 ],
               ),
             ),     
- ],
+ 
+             const SizedBox(
+             height: 20,
+            ),
+
+             Container(
+              width: 340,
+              padding: EdgeInsets.all(15),
+              child: Column(
+                  children: [
+                Obx(()=> markdown(controller.solution[0])),
+                const SizedBox(height: 15,),
+                              Obx(()=> markdown(controller.solution[1])),
+
+                const SizedBox(height: 15,),
+                              Obx(()=> markdown(controller.solution[2])),
+             ],
+              ),
+             ) 
+
+                ,const SizedBox(
+             height: 20,
+            ),
+
+
+         ]
+              )
+              )
+              )
+//pour la partie du text et des bouttons 
+            ],
         ),
       ),
     );

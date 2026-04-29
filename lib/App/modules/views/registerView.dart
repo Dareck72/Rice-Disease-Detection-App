@@ -18,7 +18,7 @@ class Registerview extends GetView<Registercontroller> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 70),
+                const SizedBox(height: 40),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -55,7 +55,7 @@ class Registerview extends GetView<Registercontroller> {
                       // Le nom de la personne
                       TextFormField(
                         decoration: InputDecoration(
-                          labelText: "Name",
+                          labelText: "Nom de famille",
                           labelStyle: TextStyle(
                             fontSize: 14,
                             color: Colors.green,
@@ -71,10 +71,39 @@ class Registerview extends GetView<Registercontroller> {
                             borderRadius: BorderRadius.circular(15),
                           ),
                         ),
-                        controller: controller.nameController,
+                        controller: controller.lastnameController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Nom nécéssaire";
+                          }
+                        },
+                      ),
+
+                      const SizedBox(height: 15),
+
+                      // Le prenom de la personne
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: "Prénom",
+                          labelStyle: TextStyle(
+                            fontSize: 14,
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.green),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.green),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                        controller: controller.fistnameController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "prenom nécéssaire";
                           }
                         },
                       ),
@@ -247,10 +276,11 @@ class Registerview extends GetView<Registercontroller> {
                                 "La valeur de loading avant la fonction  du login()     ${controller.loading.value}",
                               );
 
-                              await controller.login();
+                              await controller.register();
 
                               controller.loading.value = false;
 
+                              formKey.currentState!.reset();
                               print(
                                 "La valeur de loading aprés le     ${controller.loading.value}",
                               );
@@ -258,13 +288,10 @@ class Registerview extends GetView<Registercontroller> {
                           },
                     child: Obx(
                       () => controller.loading.value == true
-                          ?
-                           LoadingAnimationWidget.staggeredDotsWave(
-
+                          ? LoadingAnimationWidget.staggeredDotsWave(
                               color: Colors.white,
                               size: 40,
-
-                          )
+                            )
                           : Text(
                               "Inscrivez vous",
                               style: TextStyle(

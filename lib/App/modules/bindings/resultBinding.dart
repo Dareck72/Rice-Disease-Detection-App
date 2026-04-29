@@ -4,6 +4,8 @@ import 'package:monlikountche/App/modules/controllers/resultController.dart';
 class Resultbinding extends  Bindings{
   @override
   void dependencies() {
-    Get.lazyPut(() => Resultcontroller());
+    Get.put(
+      () => Resultcontroller()
+      );
   }
 }

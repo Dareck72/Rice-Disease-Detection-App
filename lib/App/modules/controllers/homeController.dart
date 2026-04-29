@@ -1,17 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Homecontroller extends GetxController {
- 
 //  LE bottomsheet
-
   XFile? data;
   Future<XFile?> pickImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();
     // Pick an image.
     final XFile? image = await picker.pickImage(source: source);
-if (image != null) {
+    if (image != null) {
     data = image;
     update(); // <--- TRÈS IMPORTANT : Dit à GetX de redessiner les widgets concernés
   }
@@ -35,4 +32,6 @@ if (image != null) {
           "Téléversez-la ici et obtenez un disagnostic en seulement quelques secondes",
     },
   ];
+
+
 }

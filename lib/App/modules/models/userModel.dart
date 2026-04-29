@@ -1,32 +1,39 @@
 import 'package:flutter/foundation.dart';
 
 class Usermodel {
-  final String name;
+  final String nom;
+  final String prenom;
   final String email;
   final String password;
-  final String tel;
+  final String sex;
+  final  String localisation;
 
   Usermodel({
     required this.email,
-    required this.name,
+    required this.nom,
+    required this.prenom,
     required this.password,
-    required this.tel,
+     this.sex = "",
+     this.localisation = "",
   });
 
    factory Usermodel.FromMap(Map<String, dynamic> map) {
     return Usermodel(
+      nom: map["nom"],
+      prenom: map["prenom"],
       email: map["email"],
-      name: map["name"],
       password: map["password"],
-      tel: map["tel"],
+      sex: map["sex"],
+      localisation: map["localisation"],
     );
   }
 
   Map<String, dynamic> toMap(Usermodel user) {
     return {
       "email":user.email,
-      "name":user.name,
-      "tel":user.tel
+      "nom":user.nom,
+      "prenom":user.prenom,
+      "sex":user.sex
     };
   }
 }

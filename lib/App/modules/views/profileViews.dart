@@ -178,6 +178,7 @@ class Profileviews extends GetView<Profilecontroller> {
               // Partie informations qui prend tout le reste
               Expanded(
                 child: Container(
+                  
                   width: double.infinity,
                   color: Colors.white,
                   child: SingleChildScrollView(
@@ -219,6 +220,7 @@ class Profileviews extends GetView<Profilecontroller> {
                           subtitle: "Français",
                           icontrain:Icons.edit_outlined
                         ),
+                      
                         const SizedBox(height: 20),
                       ],
                     ),

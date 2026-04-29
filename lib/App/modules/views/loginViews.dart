@@ -102,7 +102,7 @@ class Loginviews extends GetView<Logincontroller> {
 
                       // Le password
                       Obx(
-                        ()=> TextFormField(
+                        () => TextFormField(
                           obscureText: controller.obscureValue.value,
                           decoration: InputDecoration(
                             suffixIcon: Obx(
@@ -111,7 +111,11 @@ class Loginviews extends GetView<Logincontroller> {
                                   controller.obscureValue.value =
                                       !controller.obscureValue.value;
                                 },
-                                icon: Icon(controller.obscureValue.value ? Icons.visibility:Icons.visibility_off ),
+                                icon: Icon(
+                                  controller.obscureValue.value
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
                               ),
                             ),
                             labelText: "Password",
@@ -124,13 +128,13 @@ class Loginviews extends GetView<Logincontroller> {
                               borderSide: BorderSide(color: Colors.green),
                               borderRadius: BorderRadius.circular(15),
                             ),
-                        
+
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.green),
                               borderRadius: BorderRadius.circular(15),
                             ),
                           ),
-                        
+
                           controller: controller.passwordController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -152,9 +156,7 @@ class Loginviews extends GetView<Logincontroller> {
                 Container(
                   alignment: Alignment.bottomLeft,
                   child: GestureDetector(
-                    onTap: (){
-                      
-                    },
+                    onTap: () {},
                     child: Text(
                       "Password oublié",
                       style: TextStyle(
@@ -186,8 +188,9 @@ class Loginviews extends GetView<Logincontroller> {
                               print("Aprés le validate");
 
                               controller.loading.value = true;
-                              await controller.login();
+                                     await controller.login();
                               controller.loading.value = false;
+                              formKey.currentState!.reset();
                             }
                           },
                     child: Obx(
