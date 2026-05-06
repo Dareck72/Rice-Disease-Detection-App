@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
+import 'package:monlikountche/App/modules/controllers/loginController.dart';
 import 'package:monlikountche/App/services/uploadData.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 
@@ -82,6 +83,8 @@ class Resultcontroller extends GetxController {
 
   };
 
+Logincontroller logincontroller = Get.find<Logincontroller>();
+
   RxList solution = [].obs;
   RxList description = [].obs;
   RxInt predictedIndex = 0.obs;
@@ -90,13 +93,7 @@ class Resultcontroller extends GetxController {
 
 // fonction de prédiction si c'est une feuille de riz ou pas 
 
-void predict(XFile data){
 
-
-
-
-
-}
 
 // fonction pour la prediction de la maladie
   void prediction(XFile data) async {
@@ -115,12 +112,14 @@ void predict(XFile data){
       1,
       (i) => List.generate(
         256,
-        (y) => List.generate(256, (x) {
+        (y) => List.generate(256, (x) { 
           var pixel = resized.getPixel(x, y);
           return [pixel.r / 255.0, pixel.g / 255.0, pixel.b / 255.0];
-        }),
+        }
+        ),
       ),
     );
+   
     var output = List.filled(1 * 4, 0).reshape([1, 4]);
 
     interpreter.run(input, output);
@@ -146,7 +145,28 @@ void predict(XFile data){
 
     // ajouter les data dans l'API
 
-    uploadData().sendData(data, disease.value   );
+    (logincontroller.access_token.isNotEmpty) ? uploadData().sendData(data, disease.value ) : uploadData().sendDataWithoutConnexion(data.path, disease.value);
+    
+  }
+
+
+
+  detectRiceLeaf(XFile image) async{
+
+Interpreter interpreter= await Interpreter.fromAsset('assets/RiceDiseaseDetectionModel/RiceLeafDetectionModel.tflite'); 
+
+img.Image  imageInput = img.decodeImage(File(image.path).readAsBytesSync())!;
+
+img.Image resized = img.copyResize(imageInput, width: 256, height: 256);  
+
+
+var input = List.generate(1, 
+(i)=> List.generate(256, (y) => List.generate(256, (x){
+  var pixel = resized.getPixel(x, y);
+  return [pixel.r / 255.0, pixel.g / 255.0, pixel.b / 255.0 ];
+  })));
+
+
   }
 
 

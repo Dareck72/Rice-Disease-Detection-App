@@ -4,14 +4,24 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:monlikountche/App/modules/controllers/geolocationController.dart';
+import 'package:monlikountche/App/modules/controllers/loginController.dart';
 import 'package:monlikountche/App/modules/controllers/profileController.dart';
+import 'package:monlikountche/App/modules/routes/appRoute.dart';
 
 class Profileviews extends GetView<Profilecontroller> {
   @override
   Widget build(BuildContext context) {
+    Logincontroller logincontroller = Get.find<Logincontroller>();
     Geolocationcontroller geolocation = Get.find<Geolocationcontroller>();
 
     final formkey = GlobalKey<FormState>();
+
+    final passwordFormkey = GlobalKey<FormState>();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (logincontroller.access_token.isNotEmpty) {
+        controller.setUserData();
+      }
+    });
 
     dialog() {
       showDialog(
@@ -36,8 +46,7 @@ class Profileviews extends GetView<Profilecontroller> {
                         ),
 
                         const SizedBox(height: 30),
-
-                        // Pour le mail
+                        // Pour le Nom
                         TextFormField(
                           decoration: InputDecoration(
                             labelText: "Nom",
@@ -68,10 +77,10 @@ class Profileviews extends GetView<Profilecontroller> {
                         ),
 
                         const SizedBox(height: 30),
-                        // Pour le mail
+                        // Pour le Prenom
                         TextFormField(
                           decoration: InputDecoration(
-                            labelText: "Email",
+                            labelText: "Prenom",
                             labelStyle: TextStyle(
                               fontSize: 14,
                               color: Colors.green,
@@ -88,14 +97,12 @@ class Profileviews extends GetView<Profilecontroller> {
                             ),
                           ),
 
-                          controller: controller.updateEmailController,
+                          controller: controller.updatePrenomController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return "Mot de passe nécéssaire";
+                              return "Prenom nécéssaire";
                             }
-                            if (!value.contains("@")) {
-                              return "Entrer un email correct";
-                            }
+
                             return null;
                           },
                         ),
@@ -158,6 +165,237 @@ class Profileviews extends GetView<Profilecontroller> {
       );
     }
 
+    passwordChangeDialog() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SizedBox(
+            child: AlertDialog(
+              content: SingleChildScrollView(
+                child: Center(
+                  child: Form(
+                    key: passwordFormkey,
+                    child: Column(
+                      children: [
+                        const SizedBox(),
+
+                        Container(
+                          child: Image.asset(
+                            "assets/image/logo.png",
+                            width: 50,
+                            height: 50,
+                          ),
+                        ),
+
+                        const SizedBox(height: 30),
+
+                        // Pour l'ancien password
+                        Obx(
+                          () => TextFormField(
+                            obscureText: controller.oldObcurText.value,
+
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  controller.oldObcurText.value
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  color: Colors.green,
+                                ),
+
+                                onPressed: () {
+                                  controller.oldObcurText.value =
+                                      !controller.oldObcurText.value;
+                                },
+                              ),
+
+                              labelText: "Ancien mot de passe",
+                              labelStyle: TextStyle(
+                                fontSize: 14,
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.green),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.green),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
+
+                            controller: controller.oldPasswordController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Ancien mot de passe nécéssaire";
+                              }
+
+                              return null;
+                            },
+                          ),
+                        ),
+
+                        const SizedBox(height: 30),
+
+                        // Pour le nouveaun password
+                        Obx(
+                          () => TextFormField(
+                            obscureText: controller.newObcurText.value,
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  controller.newObcurText.value
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  color: Colors.green,
+                                ),
+
+                                onPressed: () {
+                                  controller.newObcurText.value =
+                                      !controller.newObcurText.value;
+                                },
+                              ),
+
+                              labelText: "Nouveau mot de passe",
+                              labelStyle: TextStyle(
+                                fontSize: 14,
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.green),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.green),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
+
+                            controller: controller.newPasswordController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Nouveau mot de passe nécéssaire";
+                              }
+
+                              return null;
+                            },
+                          ),
+                        ),
+
+                        const SizedBox(height: 30),
+
+                        // Pour la comfirmation du  nouveaun password
+                        Obx(
+                          () => TextFormField(
+                            obscureText: controller.newObcurText.value,
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  controller.newObcurText.value
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  color: Colors.green,
+                                ),
+
+                                onPressed: () {
+                                  controller.newObcurText.value =
+                                      !controller.newObcurText.value;
+                                },
+                              ),
+
+                              labelText: "Nouveau mot de passe",
+                              labelStyle: TextStyle(
+                                fontSize: 14,
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.green),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.green),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
+
+                            controller: controller.newPasswordConfirmController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Nouveau mot de passe nécéssaire";
+                              }
+
+                              return null;
+                            },
+                          ),
+                        ),
+
+                        const SizedBox(height: 30),
+
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            backgroundColor: Color(0xFF045435),
+                            minimumSize: Size(320, 50),
+                          ),
+                          onPressed: controller.loading.value
+                              ? null
+                              : () async {
+                                  print("le bouttons de connexion pressé");
+
+                                  if (passwordFormkey.currentState!
+                                      .validate()) {
+                                    print("Aprés le validate");
+
+                        
+                                    controller.loading.value = true;
+
+                                    print(
+                                      "la valeur de loading ${controller.loading.value}",
+                                    );
+
+                                    await controller.updateUserPassword(passwordFormkey);
+                                    controller.loading.value = false;
+                                    print(
+                                      "la valeur de loading ${controller.loading.value}",
+                                    );
+
+                                  }
+                                },
+                          child: Obx(
+                            () => controller.loading.value == true
+                                ? LoadingAnimationWidget.staggeredDotsWave(
+                                    color: Colors.white,
+                                    size: 40,
+                                  )
+                                : Text(
+                                    "Modifier le le mot de passe",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -178,7 +416,6 @@ class Profileviews extends GetView<Profilecontroller> {
               // Partie informations qui prend tout le reste
               Expanded(
                 child: Container(
-                  
                   width: double.infinity,
                   color: Colors.white,
                   child: SingleChildScrollView(
@@ -189,38 +426,49 @@ class Profileviews extends GetView<Profilecontroller> {
                           height: 120,
                         ), // Espace pour laisser passer l'avatar
 
-                        _buildProfileItem(
-                          action: () {
-                            dialog();
-                          },
-                          icon: Icons.person_outline,
-                          title: "Information",
-                          subtitle: "nom , email",
-                           icontrain:Icons.edit_outlined
+                        Obx(
+                          () => _buildProfileItem(
+                            action: () {
+                              dialog();
+                            },
+                            icon: Icons.person_outline,
+                            title: "Information",
+                            subtitle:
+                                "${controller.nom.value} , ${controller.email.value}",
+                            icontrain: Icons.edit_outlined,
+                          ),
                         ),
+                        if (logincontroller.access_token.isNotEmpty)
+                          const SizedBox(height: 25),
+                        if (logincontroller.access_token.isNotEmpty)
+                          _buildProfileItem(
+                            action: () {
+                              passwordChangeDialog();
+                            },
 
+                            icontrain: Icons.edit_outlined,
+                            icon: Icons.password_outlined,
+                            title: "Changer de mot de passe",
+                            subtitle: "",
+                          ),
                         const SizedBox(height: 25),
 
                         _buildProfileItem(
-                          action: () {
-                            dialog();
-                          },
+                          action: () {},
                           icon: Icons.location_on_outlined,
                           title: "Localisation",
-                          subtitle: "${geolocation.city } -- ${geolocation.country}",
+                          subtitle:
+                              "${geolocation.city} -- ${geolocation.country}",
                         ),
                         const SizedBox(height: 25),
 
                         _buildProfileItem(
-                          action: () {
-                            dialog();
-                          },
+                          action: () {},
                           icon: Icons.language,
                           title: "Langue",
                           subtitle: "Français",
-                          icontrain:Icons.edit_outlined
                         ),
-                      
+
                         const SizedBox(height: 20),
                       ],
                     ),
@@ -296,6 +544,7 @@ class Profileviews extends GetView<Profilecontroller> {
           ),
         ),
         subtitle: Text(
+          overflow: TextOverflow.ellipsis,
           subtitle,
           style: TextStyle(fontSize: 15, color: Colors.grey[600]),
         ),
@@ -303,7 +552,7 @@ class Profileviews extends GetView<Profilecontroller> {
           onPressed: () {
             action();
           },
-          icon:Icon(icontrain),
+          icon: Icon(icontrain),
         ),
       ),
     );

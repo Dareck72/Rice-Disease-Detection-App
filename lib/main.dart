@@ -6,11 +6,13 @@ import 'package:monlikountche/App/modules/controllers/resultController.dart';
 import 'package:monlikountche/App/modules/routes/appPage.dart';
 import 'package:monlikountche/App/modules/routes/appRoute.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // obligatoire avant tout async
   Get.put<Geolocationcontroller>(Geolocationcontroller());
-  Get.put<Resultcontroller>(Resultcontroller());
   Get.put<Logincontroller>(Logincontroller());
+  Get.put<Resultcontroller>(Resultcontroller());
+  
   runApp(MyApp());
 }
 

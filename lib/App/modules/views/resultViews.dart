@@ -63,6 +63,7 @@ class Resultviews extends GetView<Resultcontroller> {
             ListView(
                  
            children:[
+
             Container(
               padding: EdgeInsets.only(left: 25, top: 10),
               child: Row(
@@ -90,22 +91,29 @@ class Resultviews extends GetView<Resultcontroller> {
                 ],
               ),
             ),
+
+
              Container(
               width: 340,
               padding: EdgeInsets.all(15),
-              child: Column(
-                  children: [
-                Obx(()=> markdown(controller.description[0])),
-                const SizedBox(height: 15,),
-                              Obx(()=> markdown(controller.description[1])),
-
-                const SizedBox(height: 15,),
-                              Obx(()=> markdown(controller.description[2])),
-
-             ],
+              child: Obx(
+                () => controller.description.length >= 3 ? Column(
+                    children: [
+                  Obx(()=> markdown(controller.description[0])),
+                  const SizedBox(height: 15,),
+                                Obx(()=> markdown(controller.description[1])),
+                
+                  const SizedBox(height: 15,),
+                                Obx(()=> markdown(controller.description[2])),
+                
+                             ],
+                ): Center(
+      child: CircularProgressIndicator(color: Color(0xFF045435)),
+    )
               ),
-             ) 
-      ,
+             ) ,
+
+
             const SizedBox(
                 height: 20,
               ),

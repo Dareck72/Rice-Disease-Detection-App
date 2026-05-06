@@ -3,12 +3,124 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:monlikountche/App/modules/controllers/loginController.dart';
-import 'package:monlikountche/App/services/authService.dart';
 
 class Loginviews extends GetView<Logincontroller> {
   final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    final __formkey = GlobalKey<FormState>();
+
+    passwordUpdateDialog() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SizedBox(
+            child: AlertDialog(
+              content: SingleChildScrollView(
+                child: Center(
+                  child: Form(
+                    key: __formkey,
+                    child: Column(
+                      children: [
+                        const SizedBox(),
+
+                        Container(
+                          child: Image.asset(
+                            "assets/image/logo.png",
+                            width: 50,
+                            height: 50,
+                          ),
+                        ),
+
+                        const SizedBox(height: 30),
+                    
+                        // Pour l'email de l'utilisateur
+                        TextFormField(
+
+                          decoration: InputDecoration(
+                            labelText: "Email",
+                            labelStyle: TextStyle(
+                              fontSize: 14,
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold,
+                            ),
+                
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.green),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.green),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+
+                          validator: (value) {
+                            if (value == null || value.isEmpty) 
+                            {
+                              return "Email nécéssaire";
+                            
+                            }
+                            return null;
+                          },
+                       
+                             ),
+ 
+                        const SizedBox(height: 30),
+
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            backgroundColor: Color(0xFF045435),
+                            minimumSize: Size(320, 50),
+                          ),
+                          onPressed: controller.loading.value
+                              ? null
+                              : () async {
+                                  print(
+                                    "le bouttons de changement de password pressé",
+                                  );
+
+                                  if (__formkey.currentState!.validate()) {
+                                    print("Aprés le validate");
+
+                                    controller.loading.value = true;
+
+                                  
+                                  }
+                                },
+                          child: Obx(
+                            () => controller.loading.value == true
+                                ? LoadingAnimationWidget.staggeredDotsWave(
+                                    color: Colors.white,
+                                    size: 40,
+                                  )
+                                : Text(
+                                    "Changer le password",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -156,7 +268,9 @@ class Loginviews extends GetView<Logincontroller> {
                 Container(
                   alignment: Alignment.bottomLeft,
                   child: GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      passwordUpdateDialog();
+                    },
                     child: Text(
                       "Password oublié",
                       style: TextStyle(
@@ -188,7 +302,7 @@ class Loginviews extends GetView<Logincontroller> {
                               print("Aprés le validate");
 
                               controller.loading.value = true;
-                                     await controller.login();
+                              await controller.login();
                               controller.loading.value = false;
                               formKey.currentState!.reset();
                             }

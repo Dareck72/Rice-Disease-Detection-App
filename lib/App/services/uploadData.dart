@@ -1,23 +1,23 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:monlikountche/App/modules/controllers/loginController.dart';
+import 'package:path_provider/path_provider.dart';
 
-class uploadData  {
+class uploadData {
   Logincontroller logincontroller = Get.find<Logincontroller>();
 
   String url = "https://monlikoun-api.onrender.com/upload";
 
   Future sendData(XFile Image, String name) async {
-
     print("entrez dans la foncion de l'upload de donnée dans l'API");
 
     var request = http.MultipartRequest('POST', Uri.parse(url));
     request.headers["Authorization"] =
         'Bearer ${logincontroller.access_token.value}';
-    print ("le token est : ${logincontroller.access_token.value}");
+    print("le token est : ${logincontroller.access_token.value}");
     request.headers["content-Type"] = "multipart/form-data";
     request.fields["disease_name"] = name;
 
@@ -30,8 +30,9 @@ class uploadData  {
 
       return true;
     } else {
-    
-      print("Echec de l'upload de l'image avec le status code : ${response.statusCode} et le message d'erreur : ${response.reasonPhrase}");
+      print(
+        "Echec de l'upload de l'image avec le status code : ${response.statusCode} et le message d'erreur : ${response.reasonPhrase}",
+      );
       throw Exception("erreur API");
     }
   }
@@ -40,23 +41,84 @@ class uploadData  {
 
   getHistoryData() async {
     print("entré dans la fonction de récupération de l'historique");
-      url = "https://monlikoun-api.onrender.com/historique";
+    url = "https://monlikoun-api.onrender.com/historique";
     var request = await http.get(
-      
       Uri.parse(url),
-       headers: {
-      "Authorization": 'Bearer ${logincontroller.access_token.value}',
-    }
-      );
+      headers: {
+        "Authorization": 'Bearer ${logincontroller.access_token.value}',
+      },
+    );
     int statucode = request.statusCode;
     if (statucode == 200 || statucode == 201) {
       print("requete accepté ");
-      Map data = jsonDecode(request.body);
+      var data = jsonDecode(request.body);
       return data;
-    }
-    else{
-      print("Echec de la récupération de l'historique avec le status code : ${request.statusCode} et le message d'erreur : ${request.reasonPhrase}");
+    } else {
+      print(
+        "Echec de la récupération de l'historique avec le status code : ${request.statusCode} et le message d'erreur : ${request.reasonPhrase}",
+      );
       throw Exception("erreur API");
     }
   }
+
+
+ 
+  Future<void> sendDataWithoutConnexion(
+    String disease_image,
+    String disease_name,
+  ) async {
+    print(
+      "entré dans la fonction de sauvegarde des données en local sans connexion internet",
+    );
+
+    final Directory dir = await getApplicationDocumentsDirectory();
+
+    final File file = File("${dir.path}/resultas.json");
+
+    List<dynamic> results = [];
+
+    // charger les anciens résultast s'il exeistent
+
+    if (await file.exists()) {
+      results = jsonDecode(await file.readAsString());
+    }
+
+    // ajouter le nouveau résultat à la liste
+    results.add({"image_path": disease_image, "disease_name": disease_name});
+
+    print(
+      "Ajout réussit du nouveau résultat à la liste locale : image_path = $disease_image, disease_name = $disease_name",
+    );
+
+    // enregistrer la liste mise à jour dans le fichier
+    await file.writeAsString(jsonEncode(results));
+
+    print(
+      "Enregistrement réussi de la liste mise à jour dans le fichier local : ${file.path}",
+    );
+  }
+
+
+  Future<List<dynamic>> GetLocalData() async {
+    print(
+      "entré dans la fonction de récupération des données locales sans connexion internet",
+    );
+
+    final Directory dir = await getApplicationDocumentsDirectory();
+
+    final File file = File("${dir.path}/resultas.json");
+
+    if (await file.exists()) {
+      List<dynamic> results = jsonDecode(await file.readAsString());
+      print(
+        "Récupération réussie des données locales : ${results.length} résultats trouvés",
+      );
+      return results;
+    } else {
+      print("Aucun fichier local trouvé, retour d'une liste vide");
+      return [];
+    }
+  }
+
+
 }

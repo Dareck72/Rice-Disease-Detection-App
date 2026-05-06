@@ -29,7 +29,7 @@ class Homeviews extends GetView<Homecontroller> {
             alignment: Alignment.topRight,
             child: Container(
               color: Colors.white,
-              height: 250 ,
+              height:logincontroller.access_token.value.isEmpty ? 270 : 250,
               width: 200,
               child: Column(
                 children: [
@@ -51,7 +51,6 @@ class Homeviews extends GetView<Homecontroller> {
                     ),
                   ),
 
-                  const SizedBox(height: 10),
 
                     if(logincontroller.access_token.value.isEmpty)
                 
@@ -77,7 +76,6 @@ class Homeviews extends GetView<Homecontroller> {
                   ),
 
 
-                  if(logincontroller.access_token.value.isNotEmpty)
                  
                   TextButton(
 
@@ -100,7 +98,6 @@ class Homeviews extends GetView<Homecontroller> {
                   
                   ),
 
-                  const SizedBox(height: 10),
 
                   TextButton(
                     style: TextButton.styleFrom(
@@ -121,7 +118,6 @@ class Homeviews extends GetView<Homecontroller> {
                     ),
                   ),
 
-                  const SizedBox(height: 10),
 
                   TextButton(
                     style: TextButton.styleFrom(
@@ -165,7 +161,7 @@ class Homeviews extends GetView<Homecontroller> {
                     Get.back();
                   } else {
                     Get.toNamed(approute.result);
-                    resultController.prediction(controller.data!);
+                     resultController.prediction(controller.data!);
                   }
                 },
               ),

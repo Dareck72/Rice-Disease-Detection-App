@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:monlikountche/App/modules/controllers/loginController.dart';
 import 'package:monlikountche/App/modules/models/userModel.dart';
 import 'package:monlikountche/App/modules/routes/appRoute.dart';
 
@@ -11,7 +12,7 @@ class AuthService {
   Usermodel? signInData;
   Usermodel? updateData;
 
-
+  Logincontroller logincontroller = Get.find<Logincontroller>();
   final String baseLink = "https://monlikoun-api.onrender.com";
 
   Future<String> userlogin(String email, String password) async {
@@ -26,11 +27,9 @@ class AuthService {
     print("Aprés le valide de la connexion");
 
     final data = jsonDecode(req.body);
-     
 
-    
     final statuCode = req.statusCode;
-   final String  access_token = data["access_token"] ?? "";
+    final String access_token = data["access_token"] ?? "";
 
     if (statuCode == 200) {
       Get.toNamed(approute.swith);
@@ -79,29 +78,100 @@ class AuthService {
     }
   }
 
-  Future<void> UserUpdate(Usermodel user) async {
-    Uri url = Uri.parse(baseLink + "/users/me");
+  Future<dynamic> UserUpdate(String nom, String prenoms) async {
+    Uri url = Uri.parse(baseLink + "/modifier");
+
     final request = await http.put(
       url,
-      headers: {"Content-Type": "Application/json", "Autorization": "bearer "},
-      body: jsonEncode({
-        "firstname": user.nom,
-        "lastname": user.prenom,
-        "email": user.email,
-        "password": user.password,
-      }),
+      headers: {
+        "Content-Type": "Application/json",
+        "Authorization": "bearer ${logincontroller.access_token.value}",
+      },
+
+      body: jsonEncode({"nom": nom, "prenoms": prenoms}),
     );
 
     final statucode = request.statusCode;
 
     if (statucode == 200 || statucode == 201) {
-      print("satucode valide");
-      updateData = jsonDecode(request.body);
+      final data = jsonDecode(request.body);
+
+      return data;
     } else {
-      print("Statut code invalide");
       print("$statucode");
+      return "Erreur lors de la mise à jour du profil";
     }
   }
 
- 
+// modifier le password de l'utilisateur
+
+  Future<Map<String, dynamic>> Updatepassord(String old_password, String new_password, String new_password_confirm,GlobalKey<FormState> formKey) async {
+    Uri url = Uri.parse(baseLink + "/update_password");
+
+    final request = await http.put(
+      url,
+      headers: {"Content-Type": "Application/json",
+      "Authorization": "bearer ${logincontroller.access_token.value}"
+      },  
+
+      body: jsonEncode({ "old_password": old_password, "new_password": new_password, "new_password_confirm": new_password_confirm}),
+
+    );
+
+    final statucode = request.statusCode;
+    try {
+       if (statucode == 200 || statucode == 201) {
+     
+      final data = jsonDecode(request.body);
+      Get.offAllNamed(approute.login);
+      formKey.currentState?.reset();
+      
+      return data;
+
+    } else {
+
+      print("le statut code est : $statucode");
+      print("Erreur lors de la demande de réinitialisation du mot de passe");
+    
+       Get.snackbar("Erreur", "Erreur lors de la demande de réinitialisation du mot de passe", snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
+                                   
+
+    }
+    } catch (e) {
+      throw Exception("Erreur lors de la mise à jour du mot de passe: $e");
+    }
+
+  
+    return {"error": "Erreur lors de la mise à jour du mot de passe"};
+
+  }
+
+// le forgotpassword de l'utilisateur
+
+Future<dynamic> forgotPassword(String email,) async {
+    
+    Uri url = Uri.parse(baseLink + "/forgot_password");
+
+    final request = await http.post(
+      url,
+      headers: {"Content-Type": "Application/json"},
+      body: jsonEncode({"email": email,}),
+    );
+    final statucode = request.statusCode;
+    if (statucode == 200 || statucode == 201) {
+      final data = jsonDecode(request.body);
+      return data;
+    } 
+    else 
+    {
+      print("le statut code est : $statucode");
+      print("Erreur lors de la demande de réinitialisation du mot de passe");
+      return "Erreur lors de la demande de réinitialisation du mot de passe";
+    }
+
+
+
+  }
+
+
 }
