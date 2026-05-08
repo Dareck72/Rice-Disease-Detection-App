@@ -398,120 +398,123 @@ class Profileviews extends GetView<Profilecontroller> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          // 1. Fond : Image + Partie Blanche
-          Column(
-            children: [
-              // Image de couverture
-              Container(
-                height: 250, // Hauteur fixe pour la couverture
-                width: double.infinity,
-                child: Image.asset(
-                  'assets/image/profileimg.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
-
-              // Partie informations qui prend tout le reste
-              Expanded(
-                child: Container(
+      body: RefreshIndicator(
+        onRefresh: () async => controller.raffraichir( logincontroller.access_token.value ),
+        child: Stack(
+          children: [
+            // 1. Fond : Image + Partie Blanche
+            Column(
+              children: [
+                // Image de couverture
+                Container(
+                  height: 250, // Hauteur fixe pour la couverture
                   width: double.infinity,
-                  color: Colors.white,
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 120,
-                        ), // Espace pour laisser passer l'avatar
-
-                        Obx(
-                          () => _buildProfileItem(
-                            action: () {
-                              dialog();
-                            },
-                            icon: Icons.person_outline,
-                            title: "Information",
-                            subtitle:
-                                "${controller.nom.value} , ${controller.email.value}",
-                            icontrain: Icons.edit_outlined,
+                  child: Image.asset(
+                    'assets/image/profileimg.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+        
+                // Partie informations qui prend tout le reste
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    color: Colors.white,
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 120,
+                          ), // Espace pour laisser passer l'avatar
+        
+                          Obx(
+                            () => _buildProfileItem(
+                              action: () {
+                                dialog();
+                              },
+                              icon: Icons.person_outline,
+                              title: "Information",
+                              subtitle:
+                                  "${controller.nom.value} , ${controller.email.value}",
+                              icontrain: Icons.edit_outlined,
+                            ),
                           ),
-                        ),
-                        if (logincontroller.access_token.isNotEmpty)
+                          if (logincontroller.access_token.isNotEmpty)
+                            const SizedBox(height: 25),
+                          if (logincontroller.access_token.isNotEmpty)
+                            _buildProfileItem(
+                              action: () {
+                                passwordChangeDialog();
+                              },
+        
+                              icontrain: Icons.edit_outlined,
+                              icon: Icons.password_outlined,
+                              title: "Changer de mot de passe",
+                              subtitle: "",
+                            ),
                           const SizedBox(height: 25),
-                        if (logincontroller.access_token.isNotEmpty)
+        
                           _buildProfileItem(
-                            action: () {
-                              passwordChangeDialog();
-                            },
-
-                            icontrain: Icons.edit_outlined,
-                            icon: Icons.password_outlined,
-                            title: "Changer de mot de passe",
-                            subtitle: "",
+                            action: () {},
+                            icon: Icons.location_on_outlined,
+                            title: "Localisation",
+                            subtitle:
+                                "${geolocation.city} -- ${geolocation.country}",
                           ),
-                        const SizedBox(height: 25),
-
-                        _buildProfileItem(
-                          action: () {},
-                          icon: Icons.location_on_outlined,
-                          title: "Localisation",
-                          subtitle:
-                              "${geolocation.city} -- ${geolocation.country}",
-                        ),
-                        const SizedBox(height: 25),
-
-                        _buildProfileItem(
-                          action: () {},
-                          icon: Icons.language,
-                          title: "Langue",
-                          subtitle: "Français",
-                        ),
-
-                        const SizedBox(height: 20),
-                      ],
+                          const SizedBox(height: 25),
+        
+                          _buildProfileItem(
+                            action: () {},
+                            icon: Icons.language,
+                            title: "Langue",
+                            subtitle: "Français",
+                          ),
+        
+                          const SizedBox(height: 20),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-
-          // 2. L'avatar positionné à cheval entre l'image et le blanc
-          Positioned(
-            top: 175, // Ajusté pour être bien centré sur la ligne de séparation
-            left: 0,
-            right: 0,
-            child: Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 4,
-                  ), // Cercle blanc autour
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 10,
-                      spreadRadius: 2,
+              ],
+            ),
+        
+            // 2. L'avatar positionné à cheval entre l'image et le blanc
+            Positioned(
+              top: 175, // Ajusté pour être bien centré sur la ligne de séparation
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 4,
+                    ), // Cercle blanc autour
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 10,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: CircleAvatar(
+                    backgroundColor: Color(0xFFCAFAE7),
+                    radius: 70,
+                    child: Icon(
+                      Icons.person_2_outlined,
+                      size: 60,
+                      color: Color(0XFF045435),
                     ),
-                  ],
-                ),
-                child: CircleAvatar(
-                  backgroundColor: Color(0xFFCAFAE7),
-                  radius: 70,
-                  child: Icon(
-                    Icons.person_2_outlined,
-                    size: 60,
-                    color: Color(0XFF045435),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

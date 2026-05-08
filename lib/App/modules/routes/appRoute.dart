@@ -1,6 +1,7 @@
 class approute {
   static const String update = '/update';
   static const String result = '/result';
+  static const String resetPassword = '/resetPassword';
   static const String swith = '/swith';
   static const String home = '/home';
   static const String login = '/login';

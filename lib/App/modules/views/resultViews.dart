@@ -60,6 +60,9 @@ class Resultviews extends GetView<Resultcontroller> {
               child:Container(
 
                 child:
+
+      controller.riceLeafDetectionResult.value != "Pas une image de riz"  ?
+
             ListView(
                  
            children:[
@@ -119,7 +122,7 @@ class Resultviews extends GetView<Resultcontroller> {
               ),
 
 // la prediction et son resultat
-      
+
               Container(
                     padding: EdgeInsets.all(10),
                     height: 120,
@@ -183,8 +186,7 @@ class Resultviews extends GetView<Resultcontroller> {
              height: 20,
             ),
 
-      // La  partie slution et son  boutton d'écourte
-
+      // La  partie solution et son  boutton d'écourte
             Container(
               padding: EdgeInsets.only(left: 25, top: 10),
               child: Row(
@@ -214,7 +216,6 @@ class Resultviews extends GetView<Resultcontroller> {
              const SizedBox(
              height: 20,
             ),
-
              Container(
               width: 340,
               padding: EdgeInsets.all(15),
@@ -233,13 +234,29 @@ class Resultviews extends GetView<Resultcontroller> {
                 ,const SizedBox(
              height: 20,
             ),
-
-
          ]
+
+              ):
+            
+              Center(
+                child: Container(
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+
+                  child: Text("L'image soumise n'est pas une feuille de riz. Veuillez soumettre une image claire et nette d'une feuille de riz.",textAlign: TextAlign.center,style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: const Color.fromARGB(255, 230, 52, 25)
+                  ),),
+                ),
               )
-              )
-              )
+            
+              ) )
 //pour la partie du text et des bouttons 
+
+
             ],
         ),
       ),

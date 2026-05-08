@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:ui';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
@@ -7,8 +9,6 @@ import 'package:monlikountche/App/services/uploadData.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 
 class Resultcontroller extends GetxController {
-
-
   List<String> classes = [
     "Tache brune",
     "Echefaudure de feuille",
@@ -37,12 +37,10 @@ class Resultcontroller extends GetxController {
     ],
 
     3: [
-
       "Feuille d'un vert uniforme et éclatant sans taches ni lésions",
-       "Surface lisse et intacte sans décoloration ni nécrose",
-       "La plante se développe normalement sans signe d'infection"
-
-       ],
+      "Surface lisse et intacte sans décoloration ni nécrose",
+      "La plante se développe normalement sans signe d'infection",
+    ],
     4: [
       "Taches en forme de losange avec un centre gris et des bords brun-rougeâtre",
       "Maladie causée par le champignon Magnaporthe oryzae",
@@ -51,12 +49,11 @@ class Resultcontroller extends GetxController {
   };
 
   Map<int, List> diseaseSolution = {
-
     0: [
       "Appliquer du Dithane M-45 (Mancozèbe) très disponible dans les marchés d'Abomey-Calavi et Cotonou",
 
       "Amender le sol avec du NPK 10-18-18 ou de la farine d'os pour renforcer le potassium",
-      
+
       "Irriguer régulièrement avec les eaux des bas-fonds en saison sèche",
     ],
     1: [
@@ -79,23 +76,21 @@ class Resultcontroller extends GetxController {
       "Réduire les apports d'urée (NPK 15-15-15) pour éviter l'excès d'azote",
       "Utiliser des variétés résistantes comme NERICA 4 ou TOX 3145 vulgarisées par le MAEP",
     ],
-  
-
   };
 
-Logincontroller logincontroller = Get.find<Logincontroller>();
+  List<String> imageClasses = ["Pas une image de riz", "image de riz"];
+  Logincontroller logincontroller = Get.find<Logincontroller>();
 
   RxList solution = [].obs;
   RxList description = [].obs;
   RxInt predictedIndex = 0.obs;
   RxString disease = "".obs;
-  RxDouble maxProb = 0.0.obs;
 
-// fonction de prédiction si c'est une feuille de riz ou pas 
+  // fonction de prédiction si c'est une feuille de riz ou pas
 
+  RxString riceLeafDetectionResult = "".obs;
 
-
-// fonction pour la prediction de la maladie
+  // fonction pour la prediction de la maladie
   void prediction(XFile data) async {
     print("entré dans la fonction de prédiction");
 
@@ -112,14 +107,13 @@ Logincontroller logincontroller = Get.find<Logincontroller>();
       1,
       (i) => List.generate(
         256,
-        (y) => List.generate(256, (x) { 
+        (y) => List.generate(256, (x) {
           var pixel = resized.getPixel(x, y);
           return [pixel.r / 255.0, pixel.g / 255.0, pixel.b / 255.0];
-        }
-        ),
+        }),
       ),
     );
-   
+
     var output = List.filled(1 * 4, 0).reshape([1, 4]);
 
     interpreter.run(input, output);
@@ -145,31 +139,62 @@ Logincontroller logincontroller = Get.find<Logincontroller>();
 
     // ajouter les data dans l'API
 
-    (logincontroller.access_token.isNotEmpty) ? uploadData().sendData(data, disease.value ) : uploadData().sendDataWithoutConnexion(data.path, disease.value);
+    (logincontroller.access_token.isNotEmpty)
+        ? uploadData().sendData(data, disease.value)
+        : uploadData().sendDataWithoutConnexion(data.path, disease.value);
+  }
+
+  detectRiceLeaf(XFile image) async {
+    print("entré dans la fonction de détection de feuille de riz");
+
+    Interpreter interpreter = await Interpreter.fromAsset(
+      'assets/RiceDiseaseDetectionModel/RiceLeafdetectionNewModelwithMobileNet.tflite',
+    );
+
+    img.Image imageInput = img.decodeImage(File(image.path).readAsBytesSync())!;
+    img.Image resized = img.copyResize(imageInput, width: 256, height: 256);
+
+    var input = List.generate(
+      1,
+      (i) => List.generate(
+        256,
+        (y) => List.generate(256, (x) {
+          var pixel = resized.getPixel(x, y);
+          return [pixel.r / 255.0, pixel.g / 255.0, pixel.b / 255.0];
+        }),
+      ),
+    );
+
+    var output = List.filled(1 * 2, 0).reshape([1, 2]);
+    interpreter.run(input, output);
+
+    var pred = output[0];
+    double maxProb = pred[0];
+    int predictedIndex = 0;
+
+    for (int i = 1; i < pred.length; i++) {
+      if (pred[i] > maxProb) {
+        maxProb = pred[i];
+        predictedIndex = i;
+      }
+    }
+
+    riceLeafDetectionResult.value = imageClasses[predictedIndex];
     
+
+    if (riceLeafDetectionResult.value == "Pas une image de riz") {
+       print("L'image soumise n'est pas une feuille de riz");
+
+      Get.snackbar(
+        "Image non valide",
+        "L'image soumise n'est pas une feuille de riz. Veuillez soumettre une image claire et nette d'une feuille de riz.",
+     colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor:  Colors.redAccent,       
+      );
+    } else {
+      prediction(image);
+    }
   }
 
-
-
-  detectRiceLeaf(XFile image) async{
-
-Interpreter interpreter= await Interpreter.fromAsset('assets/RiceDiseaseDetectionModel/RiceLeafDetectionModel.tflite'); 
-
-img.Image  imageInput = img.decodeImage(File(image.path).readAsBytesSync())!;
-
-img.Image resized = img.copyResize(imageInput, width: 256, height: 256);  
-
-
-var input = List.generate(1, 
-(i)=> List.generate(256, (y) => List.generate(256, (x){
-  var pixel = resized.getPixel(x, y);
-  return [pixel.r / 255.0, pixel.g / 255.0, pixel.b / 255.0 ];
-  })));
-
-
-  }
-
-
-
-  
 }

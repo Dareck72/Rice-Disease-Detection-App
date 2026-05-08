@@ -58,4 +58,22 @@ class Profilecontroller extends GetxController {
 
     print("Data returned from Updatepassord: ${data["message"]}");
   }
+
+  
+   Future<void>  raffraichir ( String loginAcess) async {
+    
+    
+    if(loginAcess.isNotEmpty){
+      print("Login access: $loginAcess");
+      await Future.delayed(Duration(seconds: 2),(){
+        setUserData();
+        });
+    }
+ 
+
+  }
+
+
+
+
 }

@@ -161,7 +161,7 @@ class Homeviews extends GetView<Homecontroller> {
                     Get.back();
                   } else {
                     Get.toNamed(approute.result);
-                     resultController.prediction(controller.data!);
+                     resultController.detectRiceLeaf(controller.data!);
                   }
                 },
               ),
@@ -175,7 +175,7 @@ class Homeviews extends GetView<Homecontroller> {
                     Get.back();
                   } else {
                     Get.toNamed(approute.result);
-                    resultController.prediction(controller.data!);
+                    resultController.detectRiceLeaf(controller.data!);
                   }
                 },
               ),

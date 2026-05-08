@@ -103,75 +103,114 @@ class AuthService {
     }
   }
 
-// modifier le password de l'utilisateur
+  // modifier le password de l'utilisateur
 
-  Future<Map<String, dynamic>> Updatepassord(String old_password, String new_password, String new_password_confirm,GlobalKey<FormState> formKey) async {
+  Future<Map<String, dynamic>> Updatepassord(
+    String old_password,
+    String new_password,
+    String new_password_confirm,
+    GlobalKey<FormState> formKey,
+  ) async {
     Uri url = Uri.parse(baseLink + "/update_password");
 
     final request = await http.put(
       url,
-      headers: {"Content-Type": "Application/json",
-      "Authorization": "bearer ${logincontroller.access_token.value}"
-      },  
+      headers: {
+        "Content-Type": "Application/json",
+        "Authorization": "bearer ${logincontroller.access_token.value}",
+      },
 
-      body: jsonEncode({ "old_password": old_password, "new_password": new_password, "new_password_confirm": new_password_confirm}),
-
+      body: jsonEncode({
+        "old_password": old_password,
+        "new_password": new_password,
+        "new_password_confirm": new_password_confirm,
+      }),
     );
 
     final statucode = request.statusCode;
     try {
-       if (statucode == 200 || statucode == 201) {
-     
-      final data = jsonDecode(request.body);
-      Get.offAllNamed(approute.login);
-      formKey.currentState?.reset();
-      
-      return data;
+      if (statucode == 200 || statucode == 201) {
+        final data = jsonDecode(request.body);
+        Get.offAllNamed(approute.login);
+        formKey.currentState?.reset();
 
-    } else {
+        return data;
+      } else {
+        print("le statut code est : $statucode");
+        print("Erreur lors de la demande de réinitialisation du mot de passe");
 
-      print("le statut code est : $statucode");
-      print("Erreur lors de la demande de réinitialisation du mot de passe");
-    
-       Get.snackbar("Erreur", "Erreur lors de la demande de réinitialisation du mot de passe", snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
-                                   
-
-    }
+        Get.snackbar(
+          "Erreur",
+          "Erreur lors de la demande de réinitialisation du mot de passe",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
     } catch (e) {
       throw Exception("Erreur lors de la mise à jour du mot de passe: $e");
     }
 
-  
     return {"error": "Erreur lors de la mise à jour du mot de passe"};
-
   }
 
-// le forgotpassword de l'utilisateur
+  // le forgotpassword de l'utilisateur
 
-Future<dynamic> forgotPassword(String email,) async {
-    
+  Future<dynamic> forgotPassword(String email) async {
     Uri url = Uri.parse(baseLink + "/forgot_password");
 
     final request = await http.post(
       url,
       headers: {"Content-Type": "Application/json"},
-      body: jsonEncode({"email": email,}),
+      body: jsonEncode({"email": email}),
     );
     final statucode = request.statusCode;
     if (statucode == 200 || statucode == 201) {
       final data = jsonDecode(request.body);
+      Get.toNamed(approute.resetPassword);
+
       return data;
-    } 
-    else 
-    {
+    } else {
       print("le statut code est : $statucode");
+      print(
+        "Erreur lors de la demande d'emailpour la réinitialisation  du mot de passe",
+      );
+      return "Erreur lors de la demande d'emailpour la réinitialisation du mot de passe";
+    }
+  }
+
+  Future<dynamic> resetPassword(
+    String email,
+    String code,
+    String new_password,
+    String new_password_confirm,
+    GlobalKey<FormState> formkey,
+  ) async {
+    Uri url = Uri.parse(baseLink + "/reset_password");
+
+    final request = await http.post(
+      url,
+      headers: {"Content-Type": "Application/json"},
+      body: jsonEncode({
+        "email": email,
+        "code": code,
+        "new_password": new_password,
+        "new_password_confirm": new_password_confirm,
+      }),
+    );
+
+    final statucode = request.statusCode;
+
+    if (statucode == 200 || statucode == 201) {
+      final data = jsonDecode(request.body);
+      formkey.currentState!.reset();
+      return data;
+    } else {
+      print("le statut code est : $statucode");
+
+      print("le message envoyé est : ${jsonDecode(request.body)}");
       print("Erreur lors de la demande de réinitialisation du mot de passe");
       return "Erreur lors de la demande de réinitialisation du mot de passe";
     }
-
-
-
   }
-
-
 }

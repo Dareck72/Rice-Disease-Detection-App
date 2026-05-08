@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:monlikountche/App/modules/controllers/loginController.dart';
+import 'package:monlikountche/App/modules/routes/appRoute.dart';
 
 class Loginviews extends GetView<Logincontroller> {
   final formKey = GlobalKey<FormState>();
@@ -33,10 +34,10 @@ class Loginviews extends GetView<Logincontroller> {
                         ),
 
                         const SizedBox(height: 30),
-                    
+
                         // Pour l'email de l'utilisateur
                         TextFormField(
-
+                          controller: controller.forgotPasswordEmailController,
                           decoration: InputDecoration(
                             labelText: "Email",
                             labelStyle: TextStyle(
@@ -44,7 +45,7 @@ class Loginviews extends GetView<Logincontroller> {
                               color: Colors.green,
                               fontWeight: FontWeight.bold,
                             ),
-                
+
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.green),
                               borderRadius: BorderRadius.circular(15),
@@ -57,16 +58,13 @@ class Loginviews extends GetView<Logincontroller> {
                           ),
 
                           validator: (value) {
-                            if (value == null || value.isEmpty) 
-                            {
+                            if (value == null || value.isEmpty) {
                               return "Email nécéssaire";
-                            
                             }
                             return null;
                           },
-                       
-                             ),
- 
+                        ),
+
                         const SizedBox(height: 30),
 
                         TextButton(
@@ -77,7 +75,7 @@ class Loginviews extends GetView<Logincontroller> {
                             backgroundColor: Color(0xFF045435),
                             minimumSize: Size(320, 50),
                           ),
-                          onPressed: controller.loading.value
+                          onPressed: controller.dialogLoading.value
                               ? null
                               : () async {
                                   print(
@@ -87,9 +85,9 @@ class Loginviews extends GetView<Logincontroller> {
                                   if (__formkey.currentState!.validate()) {
                                     print("Aprés le validate");
 
-                                    controller.loading.value = true;
+                                    controller.forgotPassword();
 
-                                  
+                                    controller.dialogLoading.value = true;
                                   }
                                 },
                           child: Obx(
@@ -108,7 +106,6 @@ class Loginviews extends GetView<Logincontroller> {
                                   ),
                           ),
                         ),
-                      
                       ],
                     ),
                   ),
@@ -119,7 +116,6 @@ class Loginviews extends GetView<Logincontroller> {
         },
       );
     }
-
 
     return Scaffold(
       body: SafeArea(
