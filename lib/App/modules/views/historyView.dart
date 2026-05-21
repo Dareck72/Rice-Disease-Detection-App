@@ -96,7 +96,7 @@ class HistoryView extends GetView<Historycontroller> {
                                 fontSize: 15,
                                 color: Colors.black,
                               ),
-                              title: Text('Il y as :'),
+                              title: Text('Il y as : '),
                               subtitle: Obx(
                                 () => Text(
                                   "Maladie détecté : ${controller.data[index]["disease_name"]} ",

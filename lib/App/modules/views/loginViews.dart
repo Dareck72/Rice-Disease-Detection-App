@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:monlikountche/App/modules/controllers/loginController.dart';
-import 'package:monlikountche/App/modules/routes/appRoute.dart';
 
 class Loginviews extends GetView<Logincontroller> {
   final formKey = GlobalKey<FormState>();

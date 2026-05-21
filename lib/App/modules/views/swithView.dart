@@ -47,16 +47,17 @@ class Swithview extends GetView<Swithcontroller> {
             destinations: [
               NavigationDestination(
                 icon: Icon(Icons.home_outlined),
-                label: 'Home',
+                label: '',
               ),
               NavigationDestination(
                 icon: Icon(Icons.account_circle_outlined),
-                label: 'Profile',
+                label: ''
               ),
             ],
           ),
         ),
       ),
     );
+ 
   }
 }

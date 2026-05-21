@@ -6,9 +6,11 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:monlikountche/App/modules/controllers/loginController.dart';
 import 'package:monlikountche/App/services/uploadData.dart';
+import 'package:monlikountche/App/services/userServices.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 
 class Resultcontroller extends GetxController {
+
   List<String> classes = [
     "Tache brune",
     "Echefaudure de feuille",
@@ -80,24 +82,29 @@ class Resultcontroller extends GetxController {
 
   List<String> imageClasses = ["Pas une image de riz", "image de riz"];
   Logincontroller logincontroller = Get.find<Logincontroller>();
-
+  var data = {}.obs;
   RxList solution = [].obs;
   RxList description = [].obs;
   RxInt predictedIndex = 0.obs;
   RxString disease = "".obs;
+  RxDouble maxProb = 0.0.obs;
 
   // fonction de prédiction si c'est une feuille de riz ou pas
 
   RxString riceLeafDetectionResult = "".obs;
-
-  // fonction pour la prediction de la maladie
+ 
+  void recommendation() async {
+     data.value =  await currentUser().recommendation(disease.value);
+    print("Les données sont entres autres ");
+    print(data);
+  }
+ // fonction pour la prediction de la maladie
+ 
   void prediction(XFile data) async {
     print("entré dans la fonction de prédiction");
-
     Interpreter interpreter = await Interpreter.fromAsset(
-      'assets/RiceDiseaseDetectionModel/RicedetectionModelwithInceptionResNetV2.tfLite',
+      'assets/RiceDiseaseDetectionModel/NewModel_ofResNet50.tfLite',
     );
-
     img.Image ImageInput = img.decodeImage(File(data.path).readAsBytesSync())!;
 
     img.Image resized = img.copyResize(ImageInput, width: 256, height: 256);
@@ -118,31 +125,35 @@ class Resultcontroller extends GetxController {
 
     interpreter.run(input, output);
     var prediction = output[0];
-    double maxProb = prediction[0];
+    maxProb.value = prediction[0];
     int predictedIndex = 0;
 
     for (int i = 1; i < prediction.length; i++) {
-      if (prediction[i] > maxProb) {
+      if (prediction[i] > maxProb.value) {
         maxProb = prediction[i];
         predictedIndex = i; //
       }
     }
 
     disease.value = classes[predictedIndex];
-
     description.value = diseaseDescription[predictedIndex]!;
     solution.value = diseaseSolution[predictedIndex]!;
 
     print("La maladie détecté est : $disease");
-    print("La probabilité est  : $maxProb");
+    print("La probabilité est  : ${maxProb.value}");
     print("Sortie de la fonction de prédiction");
 
     // ajouter les data dans l'API
 
-    (logincontroller.access_token.isNotEmpty)
-        ? uploadData().sendData(data, disease.value)
-        : uploadData().sendDataWithoutConnexion(data.path, disease.value);
+    if (logincontroller.access_token.isNotEmpty) {
+      uploadData().sendData(data, disease.value);
+      print("les recommandations");
+      recommendation();
+    } else {
+      uploadData().sendDataWithoutConnexion(data.path, disease.value);
+    }
   }
+  
 
   detectRiceLeaf(XFile image) async {
     print("entré dans la fonction de détection de feuille de riz");
@@ -180,21 +191,20 @@ class Resultcontroller extends GetxController {
     }
 
     riceLeafDetectionResult.value = imageClasses[predictedIndex];
-    
 
     if (riceLeafDetectionResult.value == "Pas une image de riz") {
-       print("L'image soumise n'est pas une feuille de riz");
+      print("L'image soumise n'est pas une feuille de riz");
 
       Get.snackbar(
         "Image non valide",
         "L'image soumise n'est pas une feuille de riz. Veuillez soumettre une image claire et nette d'une feuille de riz.",
-     colorText: Colors.white,
+        colorText: Colors.white,
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor:  Colors.redAccent,       
+        backgroundColor: Colors.redAccent,
       );
     } else {
       prediction(image);
     }
   }
-
+ 
 }

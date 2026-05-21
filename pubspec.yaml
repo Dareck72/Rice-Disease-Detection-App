@@ -47,6 +47,7 @@ dependencies:
   tflite_flutter: ^0.12.1
   image: ^4.8.0
   path_provider: ^2.1.5
+  dash_chat_2: ^0.0.21
 
 dev_dependencies:
   flutter_test:
