@@ -61,14 +61,13 @@ class uploadData {
     }
   }
 
-
- 
   Future<void> sendDataWithoutConnexion(
     String disease_image,
     String disease_name,
+    DateTime timestamp,
   ) async {
     print(
-      "entré dans la fonction de sauvegarde des données en local sans connexion internet",
+      "Entré dans la fonction de sauvegarde des données en local sans connexion internet",
     );
 
     final Directory dir = await getApplicationDocumentsDirectory();
@@ -84,10 +83,14 @@ class uploadData {
     }
 
     // ajouter le nouveau résultat à la liste
-    results.add({"image_path": disease_image, "disease_name": disease_name});
+    results.add({
+      "image_path": disease_image,
+      "disease_name": disease_name,
+      "datetime": timestamp.toIso8601String(),
+    });
 
     print(
-      "Ajout réussit du nouveau résultat à la liste locale : image_path = $disease_image, disease_name = $disease_name",
+      "Ajout réussit du nouveau résultat à la liste locale :${results.last}",
     );
 
     // enregistrer la liste mise à jour dans le fichier
@@ -98,10 +101,9 @@ class uploadData {
     );
   }
 
-
   Future<List<dynamic>> GetLocalData() async {
     print(
-      "entré dans la fonction de récupération des données locales sans connexion internet",
+      "Entré dans la fonction de récupération des données locales sans connexion internet",
     );
 
     final Directory dir = await getApplicationDocumentsDirectory();
@@ -110,9 +112,7 @@ class uploadData {
 
     if (await file.exists()) {
       List<dynamic> results = jsonDecode(await file.readAsString());
-      print(
-        "Récupération réussie des données locales : ${results.length} résultats trouvés",
-      );
+
       return results;
     } else {
       print("Aucun fichier local trouvé, retour d'une liste vide");
@@ -120,5 +120,20 @@ class uploadData {
     }
   }
 
+  deletData(index) async {
+     final Directory dir = await getApplicationDocumentsDirectory();
+     final File filepath = File("${dir.path}/resultas.json ");
+        if (await filepath.exists()) {
 
+      String content = await filepath.readAsString();
+
+
+      // Convertir en liste
+      List data = jsonDecode(content);
+
+      data.removeAt(index);
+
+      await filepath.writeAsString(jsonEncode(data));
+    }
+  }
 }

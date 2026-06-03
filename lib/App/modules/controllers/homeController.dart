@@ -20,7 +20,7 @@ class Homecontroller extends GetxController {
     {
       "image": "assets/image/First.png",
       "text":
-          "Vous voyez des taches sur vos plants de riz et vous ne savez pas exactement de quoi il s’agit ?",
+     "Des taches sur vos plans de riz ?"
     },
     {
       "image": "assets/image/clicUpload.png",

@@ -10,6 +10,8 @@ class Registerview extends GetView<Registercontroller> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
@@ -23,15 +25,8 @@ class Registerview extends GetView<Registercontroller> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset("assets/image/logo.png", width: 70, height: 70),
-                    Text(
-                      "molikuntche",
-                      style: TextStyle(
-                        color: Color(0xFF045435),
-                        fontSize: 23,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    Image.asset("assets/image/logo (2).png", width: 170, height: 70),
+                   
                   ],
                 ),
 

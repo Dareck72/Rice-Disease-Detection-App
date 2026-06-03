@@ -52,7 +52,7 @@ class currentUser {
     // le statucode
 
     final Statucode = req.statusCode;
-    if (Statucode == 200 || Statucode != 201) {
+    if (Statucode == 200 || Statucode == 201) {
       print("Le statut code est : $Statucode");
       final data = jsonDecode(req.body);
       return data;

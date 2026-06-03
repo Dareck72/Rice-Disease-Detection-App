@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -161,7 +162,7 @@ class Homeviews extends GetView<Homecontroller> {
                     Get.back();
                   } else {
                     Get.toNamed(approute.result);
-                     resultController.detectRiceLeaf(controller.data!);
+                     resultController.prediction(controller.data!);
                   }
                 },
               ),
@@ -175,7 +176,7 @@ class Homeviews extends GetView<Homecontroller> {
                     Get.back();
                   } else {
                     Get.toNamed(approute.result);
-                    resultController.detectRiceLeaf(controller.data!);
+                    resultController.prediction(controller.data!);
                   }
                 },
               ),
@@ -186,6 +187,8 @@ class Homeviews extends GetView<Homecontroller> {
     }
 
     return Scaffold(
+backgroundColor: Colors.white,
+    
       body: Column(
         children: [
           SizedBox(height: 30),
@@ -199,19 +202,11 @@ class Homeviews extends GetView<Homecontroller> {
                 Row(
                   children: [
                     Container(
-                      width: 30,
+                      width: 150,
                       height: 50,
-                      child: Image.asset('assets/image/logo.png'),
+                      child: Image.asset('assets/image/logo (2).png',height: 50,width: 120,),
                     ),
-                    SizedBox(width: 10),
-                    Text(
-                      "Monlikountche",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.black,
-                      ),
-                    ),
+                   
                   ],
                 ),
 
@@ -315,13 +310,13 @@ class Homeviews extends GetView<Homecontroller> {
                         ),
                       ),
 
-                      icon: Icon(
-                        Icons.camera_alt_outlined,
+                      icon: FaIcon(
+                        FontAwesomeIcons.upload,
                         size: 30,
                         color: Colors.white,
                       ),
                       label: Text(
-                        "Téleversé une image",
+                        "Téleverser une image",
                         style: GoogleFonts.istokWeb(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

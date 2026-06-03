@@ -117,6 +117,8 @@ class Loginviews extends GetView<Logincontroller> {
     }
 
     return Scaffold(
+      backgroundColor: Colors.white,
+
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
@@ -142,15 +144,8 @@ class Loginviews extends GetView<Logincontroller> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset("assets/image/logo.png", width: 70, height: 70),
-                    Text(
-                      "monlikuntche",
-                      style: TextStyle(
-                        color: Color(0xFF045435),
-                        fontSize: 23,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    Image.asset("assets/image/logo (2).png", width: 170, height: 70),
+                   
                   ],
                 ),
 
@@ -297,9 +292,13 @@ class Loginviews extends GetView<Logincontroller> {
                               print("Aprés le validate");
 
                               controller.loading.value = true;
+                              print("Aprés le validate ============================= +++++++++++++++++++");
+                              try {
                               await controller.login();
+                              } finally {
                               controller.loading.value = false;
-                              formKey.currentState!.reset();
+                              formKey.currentState!.reset(); 
+                              }
                             }
                           },
                     child: Obx(

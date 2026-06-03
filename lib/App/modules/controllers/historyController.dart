@@ -1,10 +1,12 @@
 import 'package:get/get.dart';
 import 'package:monlikountche/App/modules/controllers/loginController.dart';
 import 'package:monlikountche/App/services/uploadData.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class Historycontroller extends GetxController {
   Logincontroller logincontroller = Get.find<Logincontroller>();  
   @override
+  
   void onInit() {
     print("entré dans la fonction onInit du controller de l'historique");
     logincontroller.access_token.isNotEmpty ? getData() : getLocalData();
@@ -13,6 +15,8 @@ class Historycontroller extends GetxController {
 
   RxList data = [].obs;
   RxBool isloading = false.obs;
+
+
 
   getData() async {
     isloading.value = true;
@@ -31,8 +35,21 @@ class Historycontroller extends GetxController {
     isloading.value = false;
   }
 
-  datetimeTOString(String Date) async {
-   DateTime  data = DateTime.parse(Date);
-   
+  datetimeTOString(DateTime Date)  {
+
+   String Tempsecoule = timeago.format(Date,locale: 'fr');
+
+   print("Il y as : $Tempsecoule");
+
+    return Tempsecoule;
   }
+
+deletHistoryItem(int Index) async {
+print("entré dans la fonction de suppression d'un élément de l'historique");
+await uploadData().deletData(Index);
+print("élément supprimé de l'historique local");
+getLocalData();
+
+}
+
 }

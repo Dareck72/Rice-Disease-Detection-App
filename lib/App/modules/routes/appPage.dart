@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:monlikountche/App/modules/bindings/chatBinding.dart';
 import 'package:monlikountche/App/modules/bindings/historyBinding.dart';
 import 'package:monlikountche/App/modules/bindings/homeBinding.dart';
 import 'package:monlikountche/App/modules/bindings/loginBindings.dart';
@@ -7,6 +8,7 @@ import 'package:monlikountche/App/modules/bindings/resetPasswordBinding.dart';
 import 'package:monlikountche/App/modules/bindings/resultBinding.dart';
 import 'package:monlikountche/App/modules/bindings/swithBinding.dart';
 import 'package:monlikountche/App/modules/routes/appRoute.dart';
+import 'package:monlikountche/App/modules/views/chatView.dart';
 import 'package:monlikountche/App/modules/views/historyView.dart';
 import 'package:monlikountche/App/modules/views/homeViews.dart' ;
 import 'package:monlikountche/App/modules/views/loginViews.dart';
@@ -20,6 +22,7 @@ class AppPage {
 
 static  final routes=[
 GetPage(name:approute.result , page: ()=>Resultviews(),binding:Resultbinding() ),
+GetPage(name:approute.chatBot , page: ()=>chatView(),binding:ChatBotBinding() ),
 GetPage(name: approute.history, page: ()=>HistoryView(),binding: Historybinding()),
 GetPage(name:approute.swith , page: ()=>Swithview(),binding:Swithbinding() ),
 GetPage(name:approute.home , page: ()=>Homeviews(),binding:Homebinding() ),

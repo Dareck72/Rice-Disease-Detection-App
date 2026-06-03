@@ -16,37 +16,41 @@ class chatController extends GetxController {
   void onSend(ChatMessage message) async {
     messages.insert(0, message);
 
-    isTyping.value = true;
-
+    
     try {
+      isTyping.value = true;
+    print("Entré dans le chatbot");
       final Response = await http.post(
-        Uri.parse(""),
+        Uri.parse("https://monlikoun-api.onrender.com/chatbot"),
         headers: {'Content-Type': 'application/json'},
 
-        body: jsonEncode({}),
+        body: jsonEncode({
+          "prompt": message.text
+        
+        }),
       );
 
+print("Requête envoyée au chatbot");
+print("Statut de la réponse : ${Response.statusCode}");
       final data = jsonDecode(Response.body);
-      
-       ChatMessage reponse = ChatMessage(
+print("Réponse du chatbot : ${data["answer"]}");
+
+      ChatMessage reponse = ChatMessage(
         user: bot,
         createdAt: DateTime.now(),
-        text: data['content'][0]['text'],
+        text: data["answer"],
       );
-
+print("Message envoyé par le chatbot : ${reponse.text}");
       messages.insert(0, reponse);
-
-
-
     } catch (e) {
-
-       ChatMessage erreur = ChatMessage(
+      ChatMessage erreur = ChatMessage(
         user: bot,
         createdAt: DateTime.now(),
         text: "Une erreur s'est produite 😕",
       );
       messages.insert(0, erreur);
-
+    }finally {
+      isTyping.value = false;
     }
   }
 }

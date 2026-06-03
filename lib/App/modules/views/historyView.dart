@@ -11,16 +11,37 @@ import 'package:monlikountche/App/modules/controllers/loginController.dart';
 class HistoryView extends GetView<Historycontroller> {
   @override
   Widget build(BuildContext context) {
-
-
-  Logincontroller logincontroller = Get.find<Logincontroller>();
+    Logincontroller logincontroller = Get.find<Logincontroller>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-     
-      logincontroller.access_token.isNotEmpty ? controller.getData() : controller.getLocalData();
+      logincontroller.access_token.isNotEmpty
+          ? controller.getData()
+          : controller.getLocalData();
     });
 
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Icon(Icons.arrow_back, color: Colors.black, size: 20),
+        ),
+        actions: [
+          Text(
+            "Historique",
+            style: GoogleFonts.istokWeb(
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(width: 20),
+        ],
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
       body: Container(
         width: MediaQuery.of(context).size.width * 1,
         height: MediaQuery.of(context).size.height * 1,
@@ -28,25 +49,6 @@ class HistoryView extends GetView<Historycontroller> {
         child: Column(
           children: [
             const SizedBox(height: 30),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Get.back();
-                  },
-                  icon: Icon(Icons.arrow_back, color: Colors.black, size: 20),
-                ),
-
-                IconButton(
-                  onPressed: () {
-                    print("");
-                  },
-                  icon: Icon(Icons.more_vert),
-                ),
-              ],
-            ),
 
             Obx(
               () => controller.isloading.value
@@ -78,16 +80,24 @@ class HistoryView extends GetView<Historycontroller> {
                                 ),
                                 child: Obx(
                                   () => ClipOval(
-                                    child:  logincontroller.access_token.isNotEmpty ? Image.network(
-                                      controller.data[index]["image_path"],
-                                      fit: BoxFit.cover,
-                                      width: 80,
-                                      height: 80,
-                                    ): Image.file(File( controller.data[index]["image_path"]),
-                                      fit: BoxFit.cover,
-                                      width: 80,
-                                      height: 80,
-                                    ),
+                                    child:
+                                        logincontroller.access_token.isNotEmpty
+                                        ? Image.network(
+                                            controller
+                                                .data[index]["image_path"],
+                                            fit: BoxFit.cover,
+                                            width: 80,
+                                            height: 80,
+                                          )
+                                        : Image.file(
+                                            File(
+                                              controller
+                                                  .data[index]["image_path"],
+                                            ),
+                                            fit: BoxFit.cover,
+                                            width: 80,
+                                            height: 80,
+                                          ),
                                   ),
                                 ),
                               ),
@@ -96,12 +106,40 @@ class HistoryView extends GetView<Historycontroller> {
                                 fontSize: 15,
                                 color: Colors.black,
                               ),
-                              title: Text('Il y as : '),
+                              title: logincontroller.access_token.isNotEmpty
+                                  ? Text(
+                                      " ${controller.datetimeTOString(DateTime.parse(controller.data[index]["created_at"]))} ",
+                                    )
+                                  : Text(
+                                      " ${controller.datetimeTOString(DateTime.parse(controller.data[index]["datetime"]))} ",
+                                    ),
                               subtitle: Obx(
                                 () => Text(
                                   "Maladie détecté : ${controller.data[index]["disease_name"]} ",
                                 ),
                               ),
+                              trailing: IconButton(
+                                onPressed: () {
+                                  if (logincontroller
+                                      .access_token
+                                      .isNotEmpty) {}else{
+                                  controller.deletHistoryItem(index);
+
+                                      }
+                                },
+                                icon: Icon(
+                                  Icons.delete_outline_outlined,
+                                  size: 15,
+                                  color: Color.fromARGB(255, 245, 69, 69),
+                                ),
+                              ),
+
+                              onTap: () {
+                                Get.toNamed(
+                                  "/details",
+                                  arguments: controller.data[index],
+                                );
+                              },
                             );
                           },
 
@@ -112,8 +150,6 @@ class HistoryView extends GetView<Historycontroller> {
                           itemCount: controller.data.length,
                         ),
                       ),
-
-
                     ),
             ),
           ],

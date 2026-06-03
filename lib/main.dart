@@ -5,9 +5,11 @@ import 'package:monlikountche/App/modules/controllers/loginController.dart';
 import 'package:monlikountche/App/modules/controllers/resultController.dart';
 import 'package:monlikountche/App/modules/routes/appPage.dart';
 import 'package:monlikountche/App/modules/routes/appRoute.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 
 void main() async {
+   timeago.setLocaleMessages('fr', timeago.FrMessages());
   WidgetsFlutterBinding.ensureInitialized(); // obligatoire avant tout async
   Get.put<Geolocationcontroller>(Geolocationcontroller());
   Get.put<Logincontroller>(Logincontroller());

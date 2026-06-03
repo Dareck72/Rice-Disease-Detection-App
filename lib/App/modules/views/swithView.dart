@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:monlikountche/App/modules/bindings/ProfileBinding.dart';
+import 'package:monlikountche/App/modules/bindings/chatBinding.dart';
 import 'package:monlikountche/App/modules/bindings/homeBinding.dart';
 import 'package:monlikountche/App/modules/controllers/swithController.dart';
+import 'package:monlikountche/App/modules/views/chatView.dart';
 import 'package:monlikountche/App/modules/views/homeViews.dart';
 import 'package:monlikountche/App/modules/views/profileViews.dart';
 
 class Swithview extends GetView<Swithcontroller> {
   @override
   Widget build(BuildContext context) {
-    final List page = [Homeviews(), Profileviews()];
+    final List page = [Homeviews(), chatView(), Profileviews()];
 
     Homebinding().dependencies();
     ProfileBinding().dependencies();
+    ChatBotBinding().dependencies();
 
     return Scaffold(
       body: Obx(() => page[controller.pageIndex.value]),
 
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
+          backgroundColor: Colors.white,
           labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>((State) {
             if (State.contains(WidgetState.selected)) {
               return TextStyle(
@@ -35,25 +39,42 @@ class Swithview extends GetView<Swithcontroller> {
           }),
         ),
         child: Obx(
-          () => NavigationBar(
-            indicatorColor: Color.fromARGB(255, 177, 202, 194),
-            surfaceTintColor: Color.fromARGB(255, 215, 215, 216),
-            elevation: 10,
-            // labelTextStyle: ,
-            selectedIndex: controller.pageIndex.value,
-            onDestinationSelected: (index) {
-              controller.pageIndex.value = index;
-            },
-            destinations: [
-              NavigationDestination(
-                icon: Icon(Icons.home_outlined),
-                label: '',
+          () => Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                top: BorderSide(
+                  color: Color.fromARGB(255, 215, 215, 220),
+                  width: 1,
+                ),
               ),
-              NavigationDestination(
-                icon: Icon(Icons.account_circle_outlined),
-                label: ''
-              ),
-            ],
+         
+            ),
+            child: NavigationBar(
+              indicatorColor: Color.fromARGB(255, 177, 202, 194),
+              surfaceTintColor: Color.fromARGB(255, 233, 233, 235),
+              elevation: 10,
+              // labelTextStyle: ,
+              selectedIndex: controller.pageIndex.value,
+              onDestinationSelected: (index) {
+                controller.pageIndex.value = index;
+              },
+              destinations: [
+                NavigationDestination(
+                  icon: Icon(Icons.home_outlined),
+                  label: '',
+                ),
+                  NavigationDestination(
+                  icon: Icon(Icons.message_outlined),
+                  label: ''
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.account_circle_outlined),
+                  label: ''
+                ),
+               
+              ],
+            ),
           ),
         ),
       ),

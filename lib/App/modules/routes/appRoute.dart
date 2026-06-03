@@ -1,5 +1,6 @@
 class approute {
   static const String update = '/update';
+  static const String chatBot = '/chatBot';
   static const String result = '/result';
   static const String resetPassword = '/resetPassword';
   static const String swith = '/swith';

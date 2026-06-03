@@ -14,11 +14,13 @@ class Logincontroller extends GetxController
   RxString access_token = "".obs;
 
 
-  login() async {
+ login() async {
     access_token.value = await AuthService().userlogin(
+
       emailController.text,
       passwordController.text,
-    );
+   
+    ) ;
     print("Le token d'accès est : ${access_token.value}");
   }
 

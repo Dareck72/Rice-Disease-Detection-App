@@ -2,10 +2,17 @@ flutter_native_splash:
   android: true
   ios: true
   web: false
+
   image: assets/image/logo.png
-  background_image: assets/image/logo.png
   branding: assets/image/molikunce.png
+
+  color: "#ffffff"
+
+  color_dark: "#ffffff"
+  image_dark: assets/image/logo.png
+  branding_dark: assets/image/molikunce.png
+
   android_12:
-    background_image: assets/image/logo.png
-    branding: assets/image/molikunce.png
+    color: "#ffffff"
     image: assets/image/logo.png
+    branding: assets/image/molikunce.png
