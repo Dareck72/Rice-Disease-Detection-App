@@ -12,6 +12,7 @@ import 'package:monlikountche/App/modules/controllers/loginController.dart';
 import 'package:monlikountche/App/modules/controllers/resultController.dart';
 import 'package:monlikountche/App/modules/controllers/swithController.dart';
 import 'package:monlikountche/App/modules/routes/appRoute.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class Homeviews extends GetView<Homecontroller> {
   @override
@@ -29,8 +30,18 @@ class Homeviews extends GetView<Homecontroller> {
           return Align(
             alignment: Alignment.topRight,
             child: Container(
+              decoration: BoxDecoration(
               color: Colors.white,
-              height:logincontroller.access_token.value.isEmpty ? 270 : 250,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 10,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              height: logincontroller.access_token.value.isEmpty ? 270 : 250,
               width: 200,
               child: Column(
                 children: [
@@ -52,34 +63,27 @@ class Homeviews extends GetView<Homecontroller> {
                     ),
                   ),
 
-
-                    if(logincontroller.access_token.value.isEmpty)
-                
-                  TextButton(
-
-                    style: TextButton.styleFrom(
-                      elevation: 5,
-                      minimumSize: Size(170, 30),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Get.toNamed(approute.login);
-                    },
-                    child: Text(
-                      "Se connecter",
-                      style: GoogleFonts.istokWeb(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                  if (logincontroller.access_token.value.isEmpty)
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        elevation: 5,
+                        minimumSize: Size(170, 30),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Get.toNamed(approute.login);
+                      },
+                      child: Text(
+                        "Se connecter",
+                        style: GoogleFonts.istokWeb(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  
-                  ),
 
-
-                 
                   TextButton(
-
                     style: TextButton.styleFrom(
                       elevation: 5,
                       minimumSize: Size(170, 30),
@@ -96,9 +100,7 @@ class Homeviews extends GetView<Homecontroller> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  
                   ),
-
 
                   TextButton(
                     style: TextButton.styleFrom(
@@ -107,7 +109,7 @@ class Homeviews extends GetView<Homecontroller> {
                     ),
                     onPressed: () async {
                       Navigator.of(context).pop();
-                      swithcontroller.pageIndex.value = 1;
+                      swithcontroller.pageIndex.value = 2;
                     },
                     child: Text(
                       "Mon compte",
@@ -118,7 +120,6 @@ class Homeviews extends GetView<Homecontroller> {
                       ),
                     ),
                   ),
-
 
                   TextButton(
                     style: TextButton.styleFrom(
@@ -145,7 +146,6 @@ class Homeviews extends GetView<Homecontroller> {
       );
     }
 
-
     bottom() {
       Get.bottomSheet(
         Container(
@@ -162,7 +162,7 @@ class Homeviews extends GetView<Homecontroller> {
                     Get.back();
                   } else {
                     Get.toNamed(approute.result);
-                     resultController.prediction(controller.data!);
+                    resultController.detectRiceLeaf(controller.data!);
                   }
                 },
               ),
@@ -176,7 +176,7 @@ class Homeviews extends GetView<Homecontroller> {
                     Get.back();
                   } else {
                     Get.toNamed(approute.result);
-                    resultController.prediction(controller.data!);
+                    resultController.detectRiceLeaf(controller.data!);
                   }
                 },
               ),
@@ -187,8 +187,8 @@ class Homeviews extends GetView<Homecontroller> {
     }
 
     return Scaffold(
-backgroundColor: Colors.white,
-    
+      backgroundColor: Colors.white,
+
       body: Column(
         children: [
           SizedBox(height: 30),
@@ -204,12 +204,15 @@ backgroundColor: Colors.white,
                     Container(
                       width: 150,
                       height: 50,
-                      child: Image.asset('assets/image/logo (2).png',height: 50,width: 120,),
+                      child: Image.asset(
+                        'assets/image/logo (2).png',
+                        height: 50,
+                        width: 120,
+                      ),
                     ),
-                   
                   ],
                 ),
-
+                // Les trois bouttons du setting
                 IconButton(
                   onPressed: () {
                     dialog();
@@ -246,6 +249,10 @@ backgroundColor: Colors.white,
                         enlargeCenterPage:
                             true, // Effet de zoom sur l'image centrale
                         viewportFraction: 0.9, // Portion de l'écran occupée
+
+                        onPageChanged: (int index, reason) {
+                          controller.currentIndex.value = index;
+                        },
                       ),
 
                       items: controller.imageAndText.map((item) {
@@ -290,8 +297,31 @@ backgroundColor: Colors.white,
                         );
                       }).toList(),
                     ),
+
+                    SizedBox(height: 10),
+
+                    Obx(
+
+                      ()=> AnimatedSmoothIndicator(
+
+                        activeIndex: controller.currentIndex.value,
+                        count: controller.imageAndText.length,
+                        effect: WormEffect(
+                          dotHeight: 10,
+                          dotWidth: 10,
+                          activeDotColor: Color.fromARGB(255, 225, 188, 22),
+                          dotColor: Colors.grey,
+                        ),
+
+                      ),
+
+                    ),
+
+           
                     // la partie du boutton pour téléversé l'image
-                    SizedBox(height: 40),
+
+
+                    SizedBox(height: 10),
 
                     TextButton.icon(
                       onPressed: () async {
@@ -324,6 +354,7 @@ backgroundColor: Colors.white,
                         ),
                       ),
                     ),
+                
                   ],
                 ),
               ),

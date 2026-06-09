@@ -16,7 +16,7 @@ class chatView extends GetView<chatController> {
         title: Text(
           "Chatbot",
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -35,7 +35,7 @@ class chatView extends GetView<chatController> {
                   currentUserContainerColor: Color.fromARGB(255, 2, 158, 109),
                   containerColor: Colors.grey.shade200,
                   showTime: true,
-                     textColor: const Color.fromARGB(255, 192, 26, 26),
+                  textColor: const Color.fromARGB(255, 192, 26, 26),
 
     messageTextBuilder:  (
       ChatMessage message,

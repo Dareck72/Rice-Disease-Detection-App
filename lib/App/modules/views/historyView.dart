@@ -7,11 +7,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:monlikountche/App/modules/controllers/historyController.dart';
 import 'package:monlikountche/App/modules/controllers/loginController.dart';
+import 'package:monlikountche/App/modules/controllers/resultController.dart';
+import 'package:monlikountche/App/modules/routes/appRoute.dart';
 
 class HistoryView extends GetView<Historycontroller> {
   @override
   Widget build(BuildContext context) {
     Logincontroller logincontroller = Get.find<Logincontroller>();
+    Resultcontroller resultcontroller = Get.find<Resultcontroller>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       logincontroller.access_token.isNotEmpty
@@ -65,6 +68,15 @@ class HistoryView extends GetView<Historycontroller> {
 
                           itemBuilder: (context, index) {
                             return ListTile(
+                              onTap: () async{
+                                Get.toNamed(
+                                 approute.result
+                                );
+                                
+                             resultcontroller.detectRiceLeaf(controller.data[index]["image_path"]);
+
+                              },
+
                               leading: Container(
                                 width: 55,
                                 decoration: BoxDecoration(
@@ -134,12 +146,7 @@ class HistoryView extends GetView<Historycontroller> {
                                 ),
                               ),
 
-                              onTap: () {
-                                Get.toNamed(
-                                  "/details",
-                                  arguments: controller.data[index],
-                                );
-                              },
+                           
                             );
                           },
 

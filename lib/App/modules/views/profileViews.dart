@@ -529,33 +529,42 @@ class Profileviews extends GetView<Profilecontroller> {
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
-      child: ListTile(
-        leading: Container(
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Color(0xFFCAFAE7).withOpacity(0.5),
-            borderRadius: BorderRadius.circular(10),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color:Color(0XFF045435), width: 1.5),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+        ),
+
+        child: ListTile(
+          leading: Container(
+            
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Color(0xFFCAFAE7).withOpacity(0.5),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: Color(0XFF045435)),
           ),
-          child: Icon(icon, color: Color(0XFF045435)),
-        ),
-        title: Text(
-          title,
-          style: GoogleFonts.istokWeb(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
+          title: Text(
+            title,
+            style: GoogleFonts.istokWeb(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
           ),
-        ),
-        subtitle: Text(
-          overflow: TextOverflow.ellipsis,
-          subtitle,
-          style: TextStyle(fontSize: 15, color: Colors.grey[600]),
-        ),
-        trailing: IconButton(
-          onPressed: () {
-            action();
-          },
-          icon: Icon(icontrain),
+          subtitle: Text(
+            overflow: TextOverflow.ellipsis,
+            subtitle,
+            style: TextStyle(fontSize: 15, color: Colors.grey[600]),
+          ),
+          trailing: IconButton(
+            onPressed: () {
+              action();
+            },
+            icon: Icon(icontrain),
+          ),
         ),
       ),
     );

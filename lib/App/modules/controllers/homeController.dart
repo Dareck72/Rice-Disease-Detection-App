@@ -16,6 +16,9 @@ class Homecontroller extends GetxController {
     return data;
   }
 
+RxInt currentIndex = 0.obs;
+
+
   final List<Map<String, String>> imageAndText = [
     {
       "image": "assets/image/First.png",

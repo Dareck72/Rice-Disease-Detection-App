@@ -124,4 +124,5 @@ class Geolocationcontroller extends GetxController {
     country.value = place.country ?? "aucun pays";
     print("la ville $city et le pays $country");
   }
+
 }

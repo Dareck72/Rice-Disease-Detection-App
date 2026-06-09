@@ -127,6 +127,8 @@ print("Les probabilités sont : $prediction");
   }
 
 
+
+
 detectRiceLeaf(XFile image) async {
   print("entré dans la fonction de détection de feuille de riz");
 
@@ -188,7 +190,5 @@ detectRiceLeaf(XFile image) async {
 
   interpreter.close();
 }
-
-
 
 }
